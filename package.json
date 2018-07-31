@@ -1,8 +1,17 @@
 {
   "name": "searchtheunsearchable",
+  "author": "Calin Lewis",
+  "homepage": "https://github.com/cdl08001/SearchTheUnsearchable#readme",
   "version": "1.0.0",
   "description": "",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cdl08001/SearchTheUnsearchable.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cdl08001/SearchTheUnsearchable/issues"
+  },
   "dependencies": {
     "bootstrap": "^3.3.7",
     "react": "^16.4.1",
@@ -10,19 +19,15 @@
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cdl08001/SearchTheUnsearchable.git"
+  "devDependencies": {
+    "electron": "^2.0.5"
   },
-  "author": "Calin Lewis",
-  "bugs": {
-    "url": "https://github.com/cdl08001/SearchTheUnsearchable/issues"
-  },
-  "homepage": "https://github.com/cdl08001/SearchTheUnsearchable#readme",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  }
+    "eject": "react-scripts eject",
+    "electron": "electron ."
+  },
+  "main": "src/electron-starter.js"
 }
