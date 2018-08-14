@@ -10,10 +10,10 @@ class App extends Component {
     this.state = {
       selectedAudio: '',
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleFileSelectionSubmit = this.handleFileSelectionSubmit.bind(this);
   }
 
-  handleSubmit(event) {
+  handleFileSelectionSubmit(event) {
     event.preventDefault();
     const targetFile = document.getElementById('fileSelector').files;
     console.log(targetFile);
@@ -25,7 +25,7 @@ class App extends Component {
         <h1 className="text-center">
           <u>Search The Unsearchable!</u>
         </h1>
-        <FileSelector handleSubmit={this.handleSubmit} />
+        <FileSelector handleFileSelectionSubmit={this.handleFileSelectionSubmit} />
       </div>
     );
   }

@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 function FileSelector(props) {
-  const { handleSubmit } = props;
+  const { handleFileSelectionSubmit } = props;
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleFileSelectionSubmit}>
       <div className="form-group">
         <label htmlFor="inputFile">
           Select an Audio File
@@ -17,7 +17,7 @@ function FileSelector(props) {
 }
 
 FileSelector.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
+  handleFileSelectionSubmit: PropTypes.func.isRequired,
 };
 
 export default FileSelector;
