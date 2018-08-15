@@ -1,5 +1,6 @@
 /* eslint-env browser */
 import React, { Component } from 'react';
+import axios from 'axios';
 import FileSelector from './Components/FileSelector';
 // Enter the following to leverage bootstrap:
 // import { Grid, Navbar, Jumbotron, Button } from 'react-bootstrap';
@@ -16,7 +17,19 @@ class App extends Component {
   handleFileSelectionSubmit(event) {
     event.preventDefault();
     const targetFile = document.getElementById('fileSelector').files;
-    console.log(targetFile);
+    axios({
+      method: 'post',
+      url: 'http://localhost:3001/audio',
+      data: {
+        audioFile: targetFile,
+      },
+    })
+      .then((response) => {
+        console.log('Success! The repsonse is: ', response);
+      })
+      .catch((error) => {
+        console.log('Error! The error is: ', error);
+      });
   }
 
   render() {
