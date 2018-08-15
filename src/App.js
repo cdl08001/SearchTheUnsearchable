@@ -16,12 +16,24 @@ class App extends Component {
 
   handleFileSelectionSubmit(event) {
     event.preventDefault();
-    const targetFile = document.getElementById('fileSelector').files;
+    const audioData = [];
+    const targetFiles = document.getElementById('fileSelector').files;
+    for (let i = 0; i < targetFiles.length; i += 1) {
+      const fileInfo = {
+        lastModifiedDate: targetFiles[i].lastModifiedDate,
+        name: targetFiles[i].name,
+        path: targetFiles[i].path,
+        size: targetFiles[i].size,
+        type: targetFiles[i].type,
+      };
+      audioData.push(fileInfo);
+    }
+    console.log(audioData[0].lastModifiedDate);
     axios({
       method: 'post',
       url: 'http://localhost:3001/audio',
       data: {
-        audioFile: targetFile,
+        audioFiles: audioData,
       },
     })
       .then((response) => {
