@@ -13,6 +13,7 @@
     "url": "https://github.com/cdl08001/SearchTheUnsearchable/issues"
   },
   "dependencies": {
+    "aws-sdk": "^2.294.0",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "bootstrap": "^3.3.7",
@@ -21,7 +22,8 @@
     "react": "^16.4.1",
     "react-bootstrap": "^0.32.1",
     "react-dom": "^16.4.1",
-    "react-scripts": "1.1.4"
+    "react-scripts": "1.1.4",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "electron": "^2.0.5",
