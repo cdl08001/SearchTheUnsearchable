@@ -1,25 +1,28 @@
 const AWS = require('aws-sdk');
+const fs = require('fs');
 
-const uuidv4 = require('uuid/v4');
+const myBucket = 'stu-bucket-fb402899-92ba-47c6-97df-c81df1b853fc';
 
-// Bucket names must be unique across all S3 users
-
-const myBucket = `stu-bucket-${uuidv4()}`;
-const myKey = 'hello_world.txt';
-const params = {
-  Bucket: myBucket,
-  ACL: 'private',
-  CreateBucketConfiguration: {
-    LocationConstraint: 'us-west-1',
-  },
+// createReadStream used for decreased memory consumption.
+// Uploads to S3 in 10mb chunks.
+const uploadAudio = (file, cb) => {
+  const s3 = new AWS.S3();
+  const input = fs.createReadStream(file.path);
+  const objectParams = {
+    Bucket: myBucket,
+    Key: file.name,
+    Body: input,
+    ServerSideEncryption: 'AES256',
+  };
+  const options = {
+    partSize: 10 * 1024 * 1024,
+    queueSize: 1,
+  };
+  input.on('error', readStreamError => cb(readStreamError));
+  s3.upload(objectParams, options, (err, data) => {
+    if (err) cb(err);
+    console.log(`Successfully uploaded: ${data} to ${myBucket}/${file.name}`);
+  });
 };
 
-const bucketPromise = new AWS.S3().createBucket(params).promise();
-
-bucketPromise.then((data) => {
-  const objectParams = { Bucket: myBucket, Key: myKey, Body: 'Hello World!' };
-  const uploadPromise = new AWS.S3().putObject(objectParams).promise();
-  uploadPromise.then((data) => {
-    console.log(`Successfully uploaded data to ${myBucket}/${myKey}`);
-  });
-}).catch(err => console.log(err, err.stack));
+module.exports = uploadAudio;
