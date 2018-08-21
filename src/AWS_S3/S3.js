@@ -20,8 +20,11 @@ const uploadAudio = (file, cb) => {
   };
   input.on('error', readStreamError => cb(readStreamError));
   s3.upload(objectParams, options, (err, data) => {
-    if (err) cb(err);
-    console.log(`Successfully uploaded: ${data} to ${myBucket}/${file.name}`);
+    if (err) {
+      cb(err);
+    } else {
+      cb(null, data);
+    }
   });
 };
 
