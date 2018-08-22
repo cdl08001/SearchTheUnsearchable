@@ -10,7 +10,7 @@ AWS.config.update({ region: 'us-east-1' });
 // Must be in the same region as the API endpoint
 // Send transcriptionjob back to cb for tracking
 
-const transcribeAudio = (file, cb) => {
+const submitTranscriptionJob = (file, cb) => {
   const transcribeService = new AWS.TranscribeService({ apiVersion: '2017-10-26' });
   const jobId = uuidv4();
   const fileExtension = file.name.slice(file.name.indexOf('.') + 1);
@@ -29,20 +29,6 @@ const transcribeAudio = (file, cb) => {
   });
 };
 
-const tempFile = {
-  lastModifiedDate: '2018-08-14T19:17:20.617Z',
-  name: 'BOSpeechTrimmed.mp3',
-  path: '/Users/calinlewis/Desktop/Personal_Projects/Sample Audio/BOSpeechTrimmed.mp3',
-  size: 2581355,
-  type: 'audio/mp3',
-  hashcode: 'f630fe5ade1595ce291186a0d441dcbefb5de8d843c3f75e2f5ac99a039ef15e',
-};
-
-transcribeAudio(tempFile, (err, data) => {
-  if (err) console.log('Transcription Error Occurred: ', err);
-  else console.log('Transcription Succeeded: ', data);
-});
-
 module.exports = {
-  transcribeAudio,
+  submitTranscriptionJob,
 };
