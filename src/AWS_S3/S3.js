@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 const fs = require('fs');
 
-const myBucket = 'stu-bucket-fb402899-92ba-47c6-97df-c81df1b853fc';
+const myBucket = 'stu-bucket-02';
 
 // createReadStream used for decreased memory consumption.
 // Uploads to S3 in 10mb chunks.
@@ -28,4 +28,7 @@ const uploadAudio = (file, cb) => {
   });
 };
 
-module.exports = uploadAudio;
+module.exports = {
+  uploadAudio,
+  myBucket,
+};
