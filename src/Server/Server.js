@@ -6,7 +6,7 @@ const calculateSHA256 = require('../Hash/HashGeneration');
 
 const { uploadAudio } = require('../AWS_S3/S3.js');
 
-const { submitTranscriptionJob } = require('../AWS_Transcribe/Transcribe.js');
+const { submitTranscriptionJob, checkTranscriptionStatus } = require('../AWS_Transcribe/Transcribe.js');
 
 const app = express();
 
@@ -31,9 +31,20 @@ app.post('/audio', (req, res) => {
       uploadAudio(file, (uploadError, uploadResultsData) => {
         if (uploadError) throw uploadError;
         console.log(`Success: Uploaded ${file.name} to S3!: ${uploadResultsData}`);
-        submitTranscriptionJob(file, (transcribeError, transcribeData) => {
-          if (transcribeError) throw transcribeError;
-          console.log('Success: Transcription Job Submitted: ', transcribeData);
+        submitTranscriptionJob(file, (submitTranscriptionError, submitTranscribeData, jobId) => {
+          if (submitTranscriptionError) throw submitTranscriptionError;
+          console.log('Success: Transcription Job Submitted: ', submitTranscribeData);
+          checkTranscriptionStatus(jobId, (transcriptionError, failureReason, inProgress, data) => {
+            if (transcriptionError) {
+              throw transcriptionError;
+            } else if (failureReason) {
+              console.log('Error: Transcription Failed: ', failureReason);
+            } else if (inProgress) {
+              console.log('The job is still in progress. Will try again in 30 seconds.');
+            } else if (data) {
+              console.log('Success: Transcription Complete', data);
+            }
+          });
         });
       });
     });
