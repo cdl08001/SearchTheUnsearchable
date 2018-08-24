@@ -12,6 +12,7 @@ const calculateSHA256 = file => new Promise((resolve, reject) => {
     } else {
       const updatedFileInfo = file;
       updatedFileInfo.hashcode = hash.digest('hex');
+      console.log('SUCCESS: Hashcode Generated: ', updatedFileInfo);
       resolve(updatedFileInfo);
     }
   });
