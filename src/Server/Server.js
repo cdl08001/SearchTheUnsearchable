@@ -56,7 +56,9 @@ app.post('/audio', (req, res) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   req.body.audioFiles.forEach((file) => {
     calculateSHA256(file)
-      .then(hashData => uploadAudio(hashData))
+      .then(hashFileData => uploadAudio(hashFileData))
+      .then(uploadFileData => submitTranscriptionJob(uploadFileData))
+      .then(transcriptionJobData => checkTranscriptionStatus(transcriptionJobData))
       .catch(error => console.log('ERROR: ', error));
   });
 });
