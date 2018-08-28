@@ -16,7 +16,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.options('/audio', (req, res) => {
+app.options('/*', (req, res) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.append('Access-Control-Allow-Headers', 'Content-Type');
   console.log('An OPTIONS network request was recieved.');
@@ -26,7 +26,7 @@ app.options('/audio', (req, res) => {
 // Calculate hashcode and send back to client
 // Client should restrict the number of selected files to 1 until handling of
 // multiple files can be supported
-app.post('/audio', (req, res) => {
+app.post('/hash', (req, res) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   calculateSHA256(req.body.audioFiles[0])
     .then((hashFileData) => {
@@ -35,15 +35,15 @@ app.post('/audio', (req, res) => {
     .catch(hashError => res.status(500).send('ERROR: Hash Calculation Error: ', hashError));
 });
 
-// Commenting out for the time being:
-// app.post('/audio', (req, res, next) => {
-//   uploadAudio(res.locals.hashFileData)
-//     .then((uploadFileData) => {
-//       res.locals.uploadFileData = uploadFileData;
-//       next();
-//     })
-//     .catch(uploadFileError => res.status(500).send('ERROR: File Upload Error: ', uploadFileError));
-// });
+app.post('/S3Upload', (req, res) => {
+  console.log('The request body is: ', req.body)
+  res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+  uploadAudio(req.body.uploadFile)
+    .then((uploadFileData) => {
+      res.status(200).send(uploadFileData);
+    })
+    .catch(uploadFileError => res.status(500).send('ERROR: File Upload Error: ', uploadFileError));
+});
 
 // app.post('/audio', (req, res, next) => {
 //   submitTranscriptionJob(res.locals.uploadFileData)

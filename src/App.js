@@ -3,7 +3,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import FileSelector from './Components/FileSelector';
-import FileMetadata from './Components/FileMetadata';
+import FileMetadataResults from './Components/FileMetadataResults';
+import S3UploadResults from './Components/S3UploadResults';
+
+const baseUrl = 'http://localhost:3001';
 
 class App extends Component {
   constructor(props) {
@@ -11,20 +14,39 @@ class App extends Component {
     this.state = {
       currentPhase: null,
     };
+    this.hashcodeResults = '';
+    this.s3UploadData = '';
     this.updateView = this.updateView.bind(this);
     this.handleFileSelectionSubmit = this.handleFileSelectionSubmit.bind(this);
     this.handleBack = this.handleBack.bind(this);
-    this.serverData = '';
+    this.handleS3UploadSubmit = this.handleS3UploadSubmit.bind(this);
   }
 
-  updateView(serverData) {
+  updateView() {
     const { currentPhase } = this.state;
     let currentView;
     if (currentPhase === null) {
-      currentView = <FileSelector handleFileSelectionSubmit={this.handleFileSelectionSubmit} />;
+      currentView = (
+        <FileSelector
+          handleFileSelectionSubmit={this.handleFileSelectionSubmit}
+        />
+      );
     }
     if (currentPhase === 'hashCodeGenerated') {
-      currentView = <FileMetadata serverData={serverData} handleBack={this.handleBack} />;
+      currentView = (
+        <FileMetadataResults
+          hashcodeResults={this.hashcodeResults}
+          handleBack={this.handleBack}
+          handleS3UploadSubmit={this.handleS3UploadSubmit}
+        />
+      );
+    }
+    if (currentPhase === 's3UploadComplete') {
+      currentView = (
+        <S3UploadResults
+          s3UploadData={this.s3UploadData}
+        />
+      );
     }
     return currentView;
   }
@@ -39,6 +61,7 @@ class App extends Component {
     }
   }
 
+  // Step 1: Select file and generate hash + metadata:
   handleFileSelectionSubmit(event) {
     event.preventDefault();
     const audioData = [];
@@ -53,21 +76,42 @@ class App extends Component {
     audioData.push(fileInfo);
     axios({
       method: 'post',
-      url: 'http://localhost:3001/audio',
+      url: `${baseUrl}/hash`,
       data: {
         audioFiles: audioData,
       },
     })
       .then((response) => {
-        this.serverData = response.data;
-        console.log('Success! The repsonse is: ', response);
+        this.hashcodeResults = response.data;
         this.setState({
           currentPhase: 'hashCodeGenerated',
         });
       })
       .catch((error) => {
-        throw new Error('Error! The error is: ', error);
+        throw new Error('ERROR (Hascode Generation): ', error);
       });
+  }
+
+  // Step 2: Send file for upload to S3:
+  handleS3UploadSubmit() {
+    if (this.hashcodeResults !== '') {
+      axios({
+        method: 'post',
+        url: `${baseUrl}/S3Upload`,
+        data: {
+          uploadFile: this.hashcodeResults,
+        },
+      })
+        .then((response) => {
+          this.s3UploadData = response.data;
+          this.setState({
+            currentPhase: 's3UploadComplete',
+          });
+        })
+        .catch((error) => {
+          throw new Error('ERROR (S3 Upload): ', error);
+        });
+    }
   }
 
   render() {
@@ -76,7 +120,7 @@ class App extends Component {
         <h1 className="text-center">
           <u>Search The Unsearchable!</u>
         </h1>
-        {this.updateView(this.serverData)}
+        {this.updateView()}
       </div>
     );
   }

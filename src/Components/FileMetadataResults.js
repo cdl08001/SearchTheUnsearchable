@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function FileMetadata(props) {
+function FileMetadataResults(props) {
   const {
-    serverData,
+    hashcodeResults,
     handleBack,
+    handleS3UploadSubmit,
   } = props;
   const {
     hashcode,
@@ -13,7 +14,7 @@ function FileMetadata(props) {
     path,
     size,
     type,
-  } = serverData;
+  } = hashcodeResults;
 
   return (
     <div>
@@ -27,21 +28,22 @@ function FileMetadata(props) {
         <li>{`Hashcode: ${hashcode}`}</li>
       </ul>
       <button type="submit" className="btn btn-primary" onClick={handleBack}>Back</button>
-      <button type="submit" className="btn btn-primary">Upload to S3</button>
+      <button type="submit" className="btn btn-primary" onClick={handleS3UploadSubmit}>Upload to S3</button>
     </div>
   );
 }
 
-FileMetadata.propTypes = {
-  serverData: PropTypes.shape({
+FileMetadataResults.propTypes = {
+  hashcodeResults: PropTypes.shape({
     hashcode: PropTypes.string.isRequired,
     lastModifiedDate: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired,
-    size: PropTypes.number.isRequired,
+    size: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
   }).isRequired,
   handleBack: PropTypes.func.isRequired,
+  handleS3UploadSubmit: PropTypes.func.isRequired,
 };
 
-export default FileMetadata;
+export default FileMetadataResults;
