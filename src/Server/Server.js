@@ -27,15 +27,12 @@ app.options('/audio', (req, res) => {
 // Client should restrict the number of selected files to 1 until handling of
 // multiple files can be supported
 app.post('/audio', (req, res) => {
-  console.log('An audio file has been recieved');
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
-  req.body.audioFiles.forEach((file) => {
-    calculateSHA256(file)
-      .then((hashFileData) => {
-        res.status(200).send(hashFileData);
-      })
-      .catch(hashError => res.status(500).send('ERROR: Hash Calculation Error: ', hashError));
-  });
+  calculateSHA256(req.body.audioFiles[0])
+    .then((hashFileData) => {
+      res.status(200).send(hashFileData);
+    })
+    .catch(hashError => res.status(500).send('ERROR: Hash Calculation Error: ', hashError));
 });
 
 // Commenting out for the time being:

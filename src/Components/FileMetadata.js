@@ -27,7 +27,7 @@ function FileMetadata(props) {
         <li>{`Hashcode: ${hashcode}`}</li>
       </ul>
       <button type="submit" className="btn btn-primary" onClick={handleBack}>Back</button>
-      <button type="submit" className="btn btn-primary">Submit</button>
+      <button type="submit" className="btn btn-primary">Upload to S3</button>
     </div>
   );
 }

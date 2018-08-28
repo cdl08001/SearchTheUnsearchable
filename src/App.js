@@ -29,20 +29,28 @@ class App extends Component {
     return currentView;
   }
 
+  handleBack(event) {
+    const { currentPhase } = this.state;
+    event.preventDefault();
+    if (currentPhase === 'hashCodeGenerated') {
+      this.setState({
+        currentPhase: null,
+      });
+    }
+  }
+
   handleFileSelectionSubmit(event) {
     event.preventDefault();
     const audioData = [];
-    const targetFiles = document.getElementById('fileSelector').files;
-    for (let i = 0; i < targetFiles.length; i += 1) {
-      const fileInfo = {
-        lastModifiedDate: targetFiles[i].lastModifiedDate,
-        name: targetFiles[i].name,
-        path: targetFiles[i].path,
-        size: targetFiles[i].size,
-        type: targetFiles[i].type,
-      };
-      audioData.push(fileInfo);
-    }
+    const targetFile = document.getElementById('fileSelector').files;
+    const fileInfo = {
+      lastModifiedDate: targetFile[0].lastModifiedDate,
+      name: targetFile[0].name,
+      path: targetFile[0].path,
+      size: targetFile[0].size,
+      type: targetFile[0].type,
+    };
+    audioData.push(fileInfo);
     axios({
       method: 'post',
       url: 'http://localhost:3001/audio',
@@ -60,16 +68,6 @@ class App extends Component {
       .catch((error) => {
         throw new Error('Error! The error is: ', error);
       });
-  }
-
-  handleBack(event) {
-    const { currentPhase } = this.state;
-    event.preventDefault();
-    if (currentPhase === 'hashCodeGenerated') {
-      this.setState({
-        currentPhase: null,
-      });
-    }
   }
 
   render() {
