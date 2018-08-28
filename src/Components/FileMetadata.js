@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 function FileMetadata(props) {
   const {
     serverData,
+    handleBack,
   } = props;
   const {
     hashcode,
@@ -25,6 +26,8 @@ function FileMetadata(props) {
         <li>{`Last Modified Date: ${new Date(lastModifiedDate)}`}</li>
         <li>{`Hashcode: ${hashcode}`}</li>
       </ul>
+      <button type="submit" className="btn btn-primary" onClick={handleBack}>Back</button>
+      <button type="submit" className="btn btn-primary">Submit</button>
     </div>
   );
 }
@@ -38,6 +41,7 @@ FileMetadata.propTypes = {
     size: PropTypes.number.isRequired,
     type: PropTypes.string.isRequired,
   }).isRequired,
+  handleBack: PropTypes.func.isRequired,
 };
 
 export default FileMetadata;

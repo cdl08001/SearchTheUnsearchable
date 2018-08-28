@@ -11,8 +11,9 @@ class App extends Component {
     this.state = {
       currentPhase: null,
     };
-    this.handleFileSelectionSubmit = this.handleFileSelectionSubmit.bind(this);
     this.updateView = this.updateView.bind(this);
+    this.handleFileSelectionSubmit = this.handleFileSelectionSubmit.bind(this);
+    this.handleBack = this.handleBack.bind(this);
     this.serverData = '';
   }
 
@@ -23,7 +24,7 @@ class App extends Component {
       currentView = <FileSelector handleFileSelectionSubmit={this.handleFileSelectionSubmit} />;
     }
     if (currentPhase === 'hashCodeGenerated') {
-      currentView = <FileMetadata serverData={serverData} />;
+      currentView = <FileMetadata serverData={serverData} handleBack={this.handleBack} />;
     }
     return currentView;
   }
@@ -57,8 +58,18 @@ class App extends Component {
         });
       })
       .catch((error) => {
-        console.log('Error! The error is: ', error);
+        throw new Error('Error! The error is: ', error);
       });
+  }
+
+  handleBack(event) {
+    const { currentPhase } = this.state;
+    event.preventDefault();
+    if (currentPhase === 'hashCodeGenerated') {
+      this.setState({
+        currentPhase: null,
+      });
+    }
   }
 
   render() {
