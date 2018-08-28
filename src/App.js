@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import FileSelector from './Components/FileSelector';
+import FileMetadata from './Components/FileMetadata';
 
 class App extends Component {
   constructor(props) {
@@ -11,6 +12,20 @@ class App extends Component {
       currentPhase: null,
     };
     this.handleFileSelectionSubmit = this.handleFileSelectionSubmit.bind(this);
+    this.updateView = this.updateView.bind(this);
+    this.serverData = '';
+  }
+
+  updateView(serverData) {
+    const { currentPhase } = this.state;
+    let currentView;
+    if (currentPhase === null) {
+      currentView = <FileSelector handleFileSelectionSubmit={this.handleFileSelectionSubmit} />;
+    }
+    if (currentPhase === 'hashCodeGenerated') {
+      currentView = <FileMetadata serverData={serverData} />;
+    }
+    return currentView;
   }
 
   handleFileSelectionSubmit(event) {
@@ -27,7 +42,6 @@ class App extends Component {
       };
       audioData.push(fileInfo);
     }
-    console.log(audioData[0].lastModifiedDated);
     axios({
       method: 'post',
       url: 'http://localhost:3001/audio',
@@ -36,9 +50,10 @@ class App extends Component {
       },
     })
       .then((response) => {
+        this.serverData = response.data;
         console.log('Success! The repsonse is: ', response);
         this.setState({
-          currentPhase: 'hashCode',
+          currentPhase: 'hashCodeGenerated',
         });
       })
       .catch((error) => {
@@ -52,7 +67,7 @@ class App extends Component {
         <h1 className="text-center">
           <u>Search The Unsearchable!</u>
         </h1>
-        <FileSelector handleFileSelectionSubmit={this.handleFileSelectionSubmit} />
+        {this.updateView(this.serverData)}
       </div>
     );
   }

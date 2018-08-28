@@ -11,7 +11,7 @@ function FileSelector(props) {
           <input type="file" id="fileSelector" accept="audio/*" multiple="true" />
         </label>
       </div>
-      <button type="submit" className="defaultButton">Submit</button>
+      <button type="submit" className="btn btn-primary">Submit</button>
     </form>
   );
 }
