@@ -6,7 +6,11 @@ const calculateSHA256 = require('../Hash/HashGeneration');
 
 const { uploadAudio } = require('../AWS_S3/S3.js');
 
-const { submitTranscriptionJob, checkTranscriptionStatus } = require('../AWS_Transcribe/Transcribe.js');
+const {
+  submitTranscriptionJob,
+  checkTranscriptionStatus,
+  pullTranscription,
+} = require('../AWS_Transcribe/Transcribe.js');
 
 const app = express();
 
@@ -16,40 +20,62 @@ app.options('/audio', (req, res) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.append('Access-Control-Allow-Headers', 'Content-Type');
   console.log('An OPTIONS network request was recieved.');
-  res.status(200).send('Sure.');
+  res.status(200).send();
 });
 
-// Current configuration has node creating two readStreams.
-// This should be reduced to one stream in the near future.
+// Calculate hashcode and send back to client
+// Client should restrict the number of selected files to 1 until handling of
+// multiple files can be supported
 app.post('/audio', (req, res) => {
   console.log('An audio file has been recieved');
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   req.body.audioFiles.forEach((file) => {
-    calculateSHA256(file, (hashError, hashResultsData) => {
-      if (hashError) { throw hashError; }
-      console.log('Success: Hashcode Generated: ', hashResultsData);
-      uploadAudio(file, (uploadError, uploadResultsData) => {
-        if (uploadError) throw uploadError;
-        console.log(`Success: Uploaded ${file.name} to S3!: ${uploadResultsData}`);
-        submitTranscriptionJob(file, (submitTranscriptionError, submitTranscribeData, jobId) => {
-          if (submitTranscriptionError) throw submitTranscriptionError;
-          console.log('Success: Transcription Job Submitted: ', submitTranscribeData);
-          checkTranscriptionStatus(jobId, (transcriptionError, failureReason, inProgress, data) => {
-            if (transcriptionError) {
-              throw transcriptionError;
-            } else if (failureReason) {
-              console.log('Error: Transcription Failed: ', failureReason);
-            } else if (inProgress) {
-              console.log('The job is still in progress. Will try again in 30 seconds.');
-            } else if (data) {
-              console.log('Success: Transcription Complete', data);
-            }
-          });
-        });
-      });
-    });
+    calculateSHA256(file)
+      .then((hashFileData) => {
+        res.status(200).send(hashFileData);
+      })
+      .catch(hashError => res.status(500).send('ERROR: Hash Calculation Error: ', hashError));
   });
-  res.send('Here is your response');
+});
+
+app.post('/audio', (req, res, next) => {
+  uploadAudio(res.locals.hashFileData)
+    .then((uploadFileData) => {
+      res.locals.uploadFileData = uploadFileData;
+      next();
+    })
+    .catch(uploadFileError => res.status(500).send('ERROR: File Upload Error: ', uploadFileError));
+});
+
+app.post('/audio', (req, res, next) => {
+  submitTranscriptionJob(res.locals.uploadFileData)
+    .then((transcriptionJobData) => {
+      res.locals.transcriptionJobData = transcriptionJobData;
+      next();
+    })
+    .catch(submitTranscriptionJobError => res.status(500).send('ERROR: Job Submission Error: ', submitTranscriptionJobError));
+});
+
+app.post('/audio', (req, res, next) => {
+  checkTranscriptionStatus(res.locals.transcriptionJobData)
+    .then((transcriptionStatusData) => {
+      res.locals.transcriptionStatusData = transcriptionStatusData;
+      next();
+    })
+    .catch(checkTranscriptionStatusError => res.status(500).send('ERROR: Check Transcription Status Error: ', checkTranscriptionStatusError));
+});
+
+app.post('/audio', (req, res, next) => {
+  pullTranscription(res.locals.transcriptionStatusData)
+    .then((transcriptionResults) => {
+      res.locals.transcriptionResults = transcriptionResults;
+      next();
+    })
+    .catch(pullTranscriptionError => res.status(500).send('ERROR: Pull Transcription Error: ', pullTranscriptionError));
+});
+
+app.post('/audio', (req, res) => {
+  res.send(500).send(res.locals.transcriptionResults);
 });
 
 app.listen(3001, () => console.log('Server is listening on port 3001!'));
