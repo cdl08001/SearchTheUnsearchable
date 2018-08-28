@@ -19,8 +19,8 @@ const uploadAudio = file => new Promise((resolve, reject) => {
     queueSize: 1,
   };
   input.on('error', readStreamError => reject(readStreamError));
-  const s3Promise = s3.upload(objectParams, options).promise();
-  s3Promise
+  const s3UploadPromise = s3.upload(objectParams, options).promise();
+  s3UploadPromise
     .then((uploadData) => {
       console.log('SUCCESS: File Uploaded: ', uploadData);
       resolve(uploadData);
@@ -28,7 +28,24 @@ const uploadAudio = file => new Promise((resolve, reject) => {
     .catch(uploadErr => reject(uploadErr));
 });
 
+const pullTranscription = transcriptionResults => new Promise((resolve, reject) => {
+  const s3 = new AWS.S3();
+  const transcriptLocation = transcriptionResults.TranscriptionJob.Transcript.TranscriptFileUri;
+  const objectParams = {
+    Bucket: myBucket,
+    Key: transcriptLocation.split('/')[4],
+  };
+  const s3pullPromise = s3.getObject(objectParams).promise();
+  s3pullPromise
+    .then((pullData) => {
+      console.log('SUCCESS: File Read: ', pullData.Body.toString());
+      resolve(pullData);
+    })
+    .catch(pullError => reject(pullError));
+});
+
 module.exports = {
   uploadAudio,
   myBucket,
+  pullTranscription,
 };
