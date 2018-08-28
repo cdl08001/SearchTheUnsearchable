@@ -8,34 +8,30 @@ AWS.config.update({ region: 'us-east-1' });
 // Create the transcribe service object:
 const transcribeService = new AWS.TranscribeService({ apiVersion: '2017-10-26' });
 
-// Need to pass in the URL of the S3 location.
-// Must be in the same region as the API endpoint
-// Send transcriptionjob back to cb for tracking
-
-const submitTranscriptionJob = file => new Promise((resolve, reject) => {
+const submitTranscriptionJob = S3UploadData => new Promise((resolve, reject) => {
   const jobId = uuidv4();
-  const fileExtension = file.key.slice(file.key.indexOf('.') + 1);
+  const fileExtension = S3UploadData.key.slice(S3UploadData.key.indexOf('.') + 1);
   const objectParams = {
     LanguageCode: 'en-US',
     Media: {
-      MediaFileUri: file.Location,
+      MediaFileUri: S3UploadData.Location,
     },
     MediaFormat: fileExtension,
     TranscriptionJobName: jobId,
-    OutputBucketName: file.Bucket,
+    OutputBucketName: S3UploadData.Bucket,
   };
   const startTranscriptionPromise = transcribeService.startTranscriptionJob(objectParams).promise();
   startTranscriptionPromise
     .then((jobData) => {
       console.log('SUCCESS: Transcription Job Submitted: ', jobData);
-      resolve(jobData);
+      resolve(jobData, S3UploadData);
     })
     .catch(jobSubmitErr => reject(jobSubmitErr));
 });
 
 const checkTranscriptionStatus = jobData => new Promise((resolve, reject) => {
   const objectParams = {
-    TranscriptionJobName: jobData.TranscriptionJobName,
+    TranscriptionJobName: jobData.TranscriptionJob.TranscriptionJobName,
   };
   const transcribeServicePromise = transcribeService.getTranscriptionJob(objectParams).promise();
   transcribeServicePromise
@@ -48,6 +44,7 @@ const checkTranscriptionStatus = jobData => new Promise((resolve, reject) => {
         setTimeout(() => { checkTranscriptionStatus(jobData); }, 30000);
       }
       if (data.TranscriptionJob.TranscriptionJobStatus === 'COMPLETED') {
+        console.log('COMPLETE: The transcription job has completed:', data);
         resolve(data);
       }
     })
