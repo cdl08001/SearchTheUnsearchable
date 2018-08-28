@@ -38,44 +38,45 @@ app.post('/audio', (req, res) => {
   });
 });
 
-app.post('/audio', (req, res, next) => {
-  uploadAudio(res.locals.hashFileData)
-    .then((uploadFileData) => {
-      res.locals.uploadFileData = uploadFileData;
-      next();
-    })
-    .catch(uploadFileError => res.status(500).send('ERROR: File Upload Error: ', uploadFileError));
-});
+// Commenting out for the time being:
+// app.post('/audio', (req, res, next) => {
+//   uploadAudio(res.locals.hashFileData)
+//     .then((uploadFileData) => {
+//       res.locals.uploadFileData = uploadFileData;
+//       next();
+//     })
+//     .catch(uploadFileError => res.status(500).send('ERROR: File Upload Error: ', uploadFileError));
+// });
 
-app.post('/audio', (req, res, next) => {
-  submitTranscriptionJob(res.locals.uploadFileData)
-    .then((transcriptionJobData) => {
-      res.locals.transcriptionJobData = transcriptionJobData;
-      next();
-    })
-    .catch(submitTranscriptionJobError => res.status(500).send('ERROR: Job Submission Error: ', submitTranscriptionJobError));
-});
+// app.post('/audio', (req, res, next) => {
+//   submitTranscriptionJob(res.locals.uploadFileData)
+//     .then((transcriptionJobData) => {
+//       res.locals.transcriptionJobData = transcriptionJobData;
+//       next();
+//     })
+//     .catch(submitTranscriptionJobError => res.status(500).send('ERROR: Job Submission Error: ', submitTranscriptionJobError));
+// });
 
-app.post('/audio', (req, res, next) => {
-  checkTranscriptionStatus(res.locals.transcriptionJobData)
-    .then((transcriptionStatusData) => {
-      res.locals.transcriptionStatusData = transcriptionStatusData;
-      next();
-    })
-    .catch(checkTranscriptionStatusError => res.status(500).send('ERROR: Check Transcription Status Error: ', checkTranscriptionStatusError));
-});
+// app.post('/audio', (req, res, next) => {
+//   checkTranscriptionStatus(res.locals.transcriptionJobData)
+//     .then((transcriptionStatusData) => {
+//       res.locals.transcriptionStatusData = transcriptionStatusData;
+//       next();
+//     })
+//     .catch(checkTranscriptionStatusError => res.status(500).send('ERROR: Check Transcription Status Error: ', checkTranscriptionStatusError));
+// });
 
-app.post('/audio', (req, res, next) => {
-  pullTranscription(res.locals.transcriptionStatusData)
-    .then((transcriptionResults) => {
-      res.locals.transcriptionResults = transcriptionResults;
-      next();
-    })
-    .catch(pullTranscriptionError => res.status(500).send('ERROR: Pull Transcription Error: ', pullTranscriptionError));
-});
+// app.post('/audio', (req, res, next) => {
+//   pullTranscription(res.locals.transcriptionStatusData)
+//     .then((transcriptionResults) => {
+//       res.locals.transcriptionResults = transcriptionResults;
+//       next();
+//     })
+//     .catch(pullTranscriptionError => res.status(500).send('ERROR: Pull Transcription Error: ', pullTranscriptionError));
+// });
 
-app.post('/audio', (req, res) => {
-  res.send(500).send(res.locals.transcriptionResults);
-});
+// app.post('/audio', (req, res) => {
+//   res.send(500).send(res.locals.transcriptionResults);
+// });
 
 app.listen(3001, () => console.log('Server is listening on port 3001!'));

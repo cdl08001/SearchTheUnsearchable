@@ -7,6 +7,9 @@ import FileSelector from './Components/FileSelector';
 class App extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      currentPhase: null,
+    };
     this.handleFileSelectionSubmit = this.handleFileSelectionSubmit.bind(this);
   }
 
@@ -34,6 +37,9 @@ class App extends Component {
     })
       .then((response) => {
         console.log('Success! The repsonse is: ', response);
+        this.setState({
+          currentPhase: 'hashCode',
+        });
       })
       .catch((error) => {
         console.log('Error! The error is: ', error);
