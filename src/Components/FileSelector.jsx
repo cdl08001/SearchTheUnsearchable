@@ -8,10 +8,10 @@ function FileSelector(props) {
       <div className="form-group">
         <label htmlFor="inputFile">
           Select an Audio File
-          <input type="file" id="fileSelector" accept="audio/*" multiple="true" />
+          <input type="file" id="fileSelector" accept="audio/*" multiple="false" />
         </label>
       </div>
-      <button type="submit" className="defaultButton">Submit</button>
+      <button type="submit" className="btn btn-primary">Submit</button>
     </form>
   );
 }

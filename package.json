@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "electron": "^2.0.8",
+    "electron-devtools-installer": "^2.2.4",
     "eslint": "^5.3.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",

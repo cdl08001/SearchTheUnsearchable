@@ -35,6 +35,13 @@ function createWindow() {
         // when you should delete the corresponding element.
         mainWindow = null
     })
+
+  const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
+  installExtension(REACT_DEVELOPER_TOOLS).then((name) => {
+    console.log('Added Extension: ', name);
+  }).catch((err) => {
+    console.log('An Error Occurred: ', err);
+  });
 }
 
 // This method will be called when Electron has finished
