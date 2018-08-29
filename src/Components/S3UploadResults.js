@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 function s3UploadResults(props) {
   const {
     s3UploadData,
+    handleBack,
+    handleTranscribeSubmit,
   } = props;
   const {
     Bucket,
@@ -23,6 +25,8 @@ function s3UploadResults(props) {
         <li>{`AWS Location: ${Location}`}</li>
         <li>{`Server Side Encryption: ${ServerSideEncryption}`}</li>
       </ul>
+      <button type="submit" className="btn btn-primary" onClick={handleBack}>Back</button>
+      <button type="submit" className="btn btn-primary" onClick={handleTranscribeSubmit}>Do Something</button>
     </div>
   );
 }
@@ -35,23 +39,8 @@ s3UploadResults.propTypes = {
     Location: PropTypes.string.isRequired,
     ServerSideEncryption: PropTypes.number.isRequired,
   }).isRequired,
+  handleBack: PropTypes.func.isRequired,
+  handleTranscribeSubmit: PropTypes.func.isRequired,
 };
 
 export default s3UploadResults;
-
-/*
-s3UploadResults:
-{…}
-Bucket:
-"stu-bucket-02"
-ETag:
-"\"7cdadd00a55a2a92384caaec5329d408\""
-Key:
-"BOSpeechTrimmed.mp3"
-Location:
-"https://stu-bucket-02.s3.amazonaws.com/BOSpeechTrimmed.mp3"
-ServerSideEncryption:
-"AES256"
-key:
-"BOSpeechTrimmed.mp3"
-*/

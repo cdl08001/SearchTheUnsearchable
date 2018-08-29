@@ -16,10 +16,12 @@ class App extends Component {
     };
     this.hashcodeResults = '';
     this.s3UploadData = '';
+    this.transcribeJobData = '';
     this.updateView = this.updateView.bind(this);
     this.handleFileSelectionSubmit = this.handleFileSelectionSubmit.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleS3UploadSubmit = this.handleS3UploadSubmit.bind(this);
+    this.handleTranscribeJobSubmit = this.handleTranscribeJobSubmit.bind(this);
   }
 
   updateView() {
@@ -45,6 +47,8 @@ class App extends Component {
       currentView = (
         <S3UploadResults
           s3UploadData={this.s3UploadData}
+          handleBack={this.handleBack}
+          handleTranscribeSubmit={this.handleTranscribeSubmit}
         />
       );
     }
@@ -55,9 +59,10 @@ class App extends Component {
     const { currentPhase } = this.state;
     event.preventDefault();
     if (currentPhase === 'hashCodeGenerated') {
-      this.setState({
-        currentPhase: null,
-      });
+      this.setState({ currentPhase: null });
+    }
+    if (currentPhase === 's3UploadComplete') {
+      this.setState({ currentPhase: 'hashCodeGenerated' });
     }
   }
 
@@ -110,6 +115,28 @@ class App extends Component {
         })
         .catch((error) => {
           throw new Error('ERROR (S3 Upload): ', error);
+        });
+    }
+  }
+
+  // Step 3: Initiate transcription job:
+  handleTranscribeJobSubmit() {
+    if (this.s3UploadData !== '') {
+      axios({
+        method: 'post',
+        url: `${baseUrl}/submitTranscribeJob`,
+        data: {
+          uploadFile: this.s3UploadData,
+        },
+      })
+        .then((response) => {
+          this.transcribeJobData = response.data;
+          this.setState({
+            currentPhase: 'transcribeJobSubmitted',
+          });
+        })
+        .catch((error) => {
+          throw new Error('ERROR (Transcription Job): ', error);
         });
     }
   }
