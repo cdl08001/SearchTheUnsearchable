@@ -37,13 +37,7 @@ const checkTranscriptionStatus = jobData => new Promise((resolve, reject) => {
     .then((data) => {
       if (data.TranscriptionJob.TranscriptionJobStatus === 'FAILED') {
         reject(data.TranscriptionJob.FailureReason);
-      }
-      if (data.TranscriptionJob.TranscriptionJobStatus === 'IN_PROGRESS') {
-        console.log('WAITING: The job is still in progress. Will retry in 30 seconds.');
-        setTimeout(() => { checkTranscriptionStatus(jobData); }, 30000);
-      }
-      if (data.TranscriptionJob.TranscriptionJobStatus === 'COMPLETED') {
-        console.log('COMPLETE: The transcription job has completed:', data);
+      } else {
         resolve(data);
       }
     })

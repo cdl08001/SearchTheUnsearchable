@@ -165,7 +165,12 @@ class App extends Component {
       })
         .then((response) => {
           if (response.data.TranscriptionJob.TranscriptionJobStatus === 'IN_PROGRESS') {
+            console.log('Checking...');
             setTimeout(() => { this.checkTranscibeJobStatus(); }, 30000);
+          }
+          if (response.data.TranscriptionJob.TranscriptionJobbStatus === 'COMPLETED') {
+            this.transcriptionResults = response.data;
+            console.log(this.transcriptionResults);
           }
         })
         .catch((error) => {
