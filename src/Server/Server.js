@@ -47,20 +47,20 @@ app.post('/S3Upload', (req, res) => {
 app.post('/submitTranscribeJob', (req, res) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   submitTranscriptionJob(req.body.uploadFile)
-    .then((transcriptionJobData) => {
-      res.status(200).send(transcriptionJobData);
+    .then((transcribeJobData) => {
+      res.status(200).send(transcribeJobData);
     })
     .catch(submitTranscriptionJobError => res.status(500).send('ERROR: Job Submission Error: ', submitTranscriptionJobError));
 });
 
-// app.post('/audio', (req, res, next) => {
-//   checkTranscriptionStatus(res.locals.transcriptionJobData)
-//     .then((transcriptionStatusData) => {
-//       res.locals.transcriptionStatusData = transcriptionStatusData;
-//       next();
-//     })
-//     .catch(checkTranscriptionStatusError => res.status(500).send('ERROR: Check Transcription Status Error: ', checkTranscriptionStatusError));
-// });
+app.get('/checkTranscribeStatus', (req, res) => {
+  res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+  checkTranscriptionStatus(res.body.transcribeJobData)
+    .then((transcriptionStatusData) => {
+      res.status(200).send(transcriptionStatusData);
+    })
+    .catch(checkTranscriptionStatusError => res.status(500).send('ERROR: Check Transcription Status Error: ', checkTranscriptionStatusError));
+});
 
 // app.post('/audio', (req, res, next) => {
 //   pullTranscription(res.locals.transcriptionStatusData)

@@ -159,6 +159,9 @@ class App extends Component {
       axios({
         method: 'get',
         url: `${baseUrl}/checkTranscribeStatus`,
+        data: {
+          transcribeJobData: this.transcribeJobData,
+        },
       })
         .then((response) => {
           if (response.data.TranscriptionJob.TranscriptionJobStatus === 'IN_PROGRESS') {
