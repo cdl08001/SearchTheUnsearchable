@@ -23,7 +23,6 @@ const submitTranscriptionJob = S3UploadData => new Promise((resolve, reject) => 
   const startTranscriptionPromise = transcribeService.startTranscriptionJob(objectParams).promise();
   startTranscriptionPromise
     .then((jobData) => {
-      console.log('SUCCESS: Transcription Job Submitted: ', jobData);
       resolve(jobData, S3UploadData);
     })
     .catch(jobSubmitErr => reject(jobSubmitErr));

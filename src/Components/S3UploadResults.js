@@ -5,7 +5,7 @@ function s3UploadResults(props) {
   const {
     s3UploadData,
     handleBack,
-    handleTranscribeSubmit,
+    handleTranscribeJobSubmit,
   } = props;
   const {
     Bucket,
@@ -26,7 +26,7 @@ function s3UploadResults(props) {
         <li>{`Server Side Encryption: ${ServerSideEncryption}`}</li>
       </ul>
       <button type="submit" className="btn btn-primary" onClick={handleBack}>Back</button>
-      <button type="submit" className="btn btn-primary" onClick={handleTranscribeSubmit}>Do Something</button>
+      <button type="submit" className="btn btn-primary" onClick={handleTranscribeJobSubmit}>Submit Transcription Job</button>
     </div>
   );
 }
@@ -37,10 +37,10 @@ s3UploadResults.propTypes = {
     ETag: PropTypes.string.isRequired,
     Key: PropTypes.string.isRequired,
     Location: PropTypes.string.isRequired,
-    ServerSideEncryption: PropTypes.number.isRequired,
+    ServerSideEncryption: PropTypes.string.isRequired,
   }).isRequired,
   handleBack: PropTypes.func.isRequired,
-  handleTranscribeSubmit: PropTypes.func.isRequired,
+  handleTranscribeJobSubmit: PropTypes.func.isRequired,
 };
 
 export default s3UploadResults;

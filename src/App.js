@@ -5,6 +5,7 @@ import axios from 'axios';
 import FileSelector from './Components/FileSelector';
 import FileMetadataResults from './Components/FileMetadataResults';
 import S3UploadResults from './Components/S3UploadResults';
+import TranscriptionJobResults from './Components/TranscriptionJobResults';
 
 const baseUrl = 'http://localhost:3001';
 
@@ -48,7 +49,14 @@ class App extends Component {
         <S3UploadResults
           s3UploadData={this.s3UploadData}
           handleBack={this.handleBack}
-          handleTranscribeSubmit={this.handleTranscribeSubmit}
+          handleTranscribeJobSubmit={this.handleTranscribeJobSubmit}
+        />
+      );
+    }
+    if (currentPhase === 'transcribeJobSubmitted') {
+      currentView = (
+        <TranscriptionJobResults
+          transcribeJobData={this.transcribeJobData}
         />
       );
     }
