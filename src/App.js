@@ -18,11 +18,13 @@ class App extends Component {
     this.hashcodeResults = '';
     this.s3UploadData = '';
     this.transcribeJobData = '';
+    this.transcriptionResults = '';
     this.updateView = this.updateView.bind(this);
     this.handleFileSelectionSubmit = this.handleFileSelectionSubmit.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleS3UploadSubmit = this.handleS3UploadSubmit.bind(this);
     this.handleTranscribeJobSubmit = this.handleTranscribeJobSubmit.bind(this);
+    this.checkTranscribeJobStatus = this.checkTranscribeJobStatus.bind(this);
   }
 
   updateView() {
@@ -145,6 +147,26 @@ class App extends Component {
         })
         .catch((error) => {
           throw new Error('ERROR (Transcription Job): ', error);
+        });
+    }
+  }
+
+  // Step 4: Check transcription job status.
+  // if transcription results have not been saved, continue to
+  // check until job is completed.
+  checkTranscribeJobStatus() {
+    if (this.transcriptionResults === '') {
+      axios({
+        method: 'get',
+        url: `${baseUrl}/checkTranscribeStatus`,
+      })
+        .then((response) => {
+          if (response.data.TranscriptionJob.TranscriptionJobStatus === 'IN_PROGRESS') {
+            setTimeout(() => { this.checkTranscibeJobStatus(); }, 30000);
+          }
+        })
+        .catch((error) => {
+          throw new Error('ERROR (Check Job Status): ', error);
         });
     }
   }

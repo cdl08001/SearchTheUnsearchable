@@ -21,6 +21,10 @@ function TranscriptionJobResults(props) {
         <li>{`Media Format: ${MediaFormat}`}</li>
         <li>{`Language Code: ${LanguageCode}`}</li>
       </ul>
+      <h3>
+      The operation is currently running.
+      The system will automatically check for data every 30 seconds.
+      </h3>
     </div>
   );
 }
