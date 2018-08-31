@@ -67,6 +67,11 @@ class App extends Component {
         />
       );
     }
+    if (currentPhase === 'transcriptionDownloadComplete') {
+      currentView = (
+        <TranscriptionDownloadResults />
+      );
+    }
     return currentView;
   }
 
@@ -202,7 +207,10 @@ class App extends Component {
       })
         .then((response) => {
           console.log(response);
-          console.log(JSON.parse(response));
+          this.transcription = response.data;
+          this.setState({
+            currentPhase: 'transcriptionDownloadComplete',
+          });
         })
         .catch((error) => {
           throw new Error('ERROR (Downloading Transcription): ', error);
