@@ -30,8 +30,6 @@ function TranscriptionJobResults(props) {
   );
 }
 
-export default TranscriptionJobResults;
-
 TranscriptionJobResults.propTypes = {
   checkTranscribeJobStatus: PropTypes.func.isRequired,
   transcribeJobData: PropTypes.shape({
@@ -46,4 +44,28 @@ TranscriptionJobResults.propTypes = {
       TranscriptionJobStatus: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
+  transcribeJobResults: PropTypes.shape({
+    CompletionTime: PropTypes.string.isRequired,
+    CreationTime: PropTypes.string.isRequired,
+    LanguageCode: PropTypes.string.isRequired,
+    Media: PropTypes.shape({
+      MediaFileUri: PropTypes.string.isRequired,
+    }).isRequired,
+    MediaFormat: PropTypes.string.isRequired,
+    MediaSampleRateHertz: PropTypes.number.isRequired,
+    Settings: PropTypes.shape({
+      ChannelIdentification: PropTypes.bool.isRequired,
+    }).isRequired,
+    Transcript: PropTypes.shape({
+      TranscriptFileUri: PropTypes.string.isRequired,
+    }).isRequired,
+    TranscriptionJobName: PropTypes.string.isRequired,
+    TranscriptionJobStatus: PropTypes.string.isRequired,
+  }),
 };
+
+TranscriptionJobResults.defaultProps = {
+  transcribeJobResults: null,
+};
+
+export default TranscriptionJobResults;
