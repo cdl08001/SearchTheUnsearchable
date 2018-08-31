@@ -53,9 +53,9 @@ app.post('/submitTranscribeJob', (req, res) => {
     .catch(submitTranscriptionJobError => res.status(500).send('ERROR: Job Submission Error: ', submitTranscriptionJobError));
 });
 
-app.get('/checkTranscribeStatus', (req, res) => {
+app.post('/checkTranscribeStatus', (req, res) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
-  checkTranscriptionStatus(res.body.transcribeJobData)
+  checkTranscriptionStatus(req.body.transcribeJobData)
     .then((transcriptionStatusData) => {
       res.status(200).send(transcriptionStatusData);
     })

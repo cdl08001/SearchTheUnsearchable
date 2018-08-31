@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 function TranscriptionJobResults(props) {
-  const { transcribeJobData } = props;
+  const { transcribeJobData, checkTranscribeJobStatus } = props;
   const { TranscriptionJob } = transcribeJobData;
   const {
     CreationTime,
@@ -22,6 +22,7 @@ function TranscriptionJobResults(props) {
         <li>{`Language Code: ${LanguageCode}`}</li>
       </ul>
       <h3>
+        {checkTranscribeJobStatus()}
       The operation is currently running.
       The system will automatically check for data every 30 seconds.
       </h3>
@@ -32,6 +33,7 @@ function TranscriptionJobResults(props) {
 export default TranscriptionJobResults;
 
 TranscriptionJobResults.propTypes = {
+  checkTranscribeJobStatus: PropTypes.func.isRequired,
   transcribeJobData: PropTypes.shape({
     TranscriptionJob: PropTypes.shape({
       CreationTime: PropTypes.string.isRequired,

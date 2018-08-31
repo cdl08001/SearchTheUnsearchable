@@ -35,11 +35,7 @@ const checkTranscriptionStatus = jobData => new Promise((resolve, reject) => {
   const transcribeServicePromise = transcribeService.getTranscriptionJob(objectParams).promise();
   transcribeServicePromise
     .then((data) => {
-      if (data.TranscriptionJob.TranscriptionJobStatus === 'FAILED') {
-        reject(data.TranscriptionJob.FailureReason);
-      } else {
-        resolve(data);
-      }
+      resolve(data);
     })
     .catch(transcriptionErr => reject(transcriptionErr));
 });

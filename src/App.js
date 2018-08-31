@@ -59,6 +59,7 @@ class App extends Component {
       currentView = (
         <TranscriptionJobResults
           transcribeJobData={this.transcribeJobData}
+          checkTranscribeJobStatus={this.checkTranscribeJobStatus}
         />
       );
     }
@@ -157,7 +158,7 @@ class App extends Component {
   checkTranscribeJobStatus() {
     if (this.transcriptionResults === '') {
       axios({
-        method: 'get',
+        method: 'post',
         url: `${baseUrl}/checkTranscribeStatus`,
         data: {
           transcribeJobData: this.transcribeJobData,
@@ -166,11 +167,14 @@ class App extends Component {
         .then((response) => {
           if (response.data.TranscriptionJob.TranscriptionJobStatus === 'IN_PROGRESS') {
             console.log('Checking...');
-            setTimeout(() => { this.checkTranscibeJobStatus(); }, 30000);
+            setTimeout(() => { this.checkTranscribeJobStatus(); }, 30000);
           }
-          if (response.data.TranscriptionJob.TranscriptionJobbStatus === 'COMPLETED') {
+          if (response.data.TranscriptionJob.TranscriptionJobStatus === 'COMPLETED') {
             this.transcriptionResults = response.data;
             console.log(this.transcriptionResults);
+          }
+          if (response.data.TranscriptionJob.TranscriptionJobStatus === 'FAILED') {
+            throw new Error('ERROR (Transcription Failed): ', response.data.TranscriptionJob.FailureReason);
           }
         })
         .catch((error) => {
