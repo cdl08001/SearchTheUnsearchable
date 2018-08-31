@@ -18,7 +18,7 @@ class App extends Component {
     this.hashcodeResults = '';
     this.s3UploadData = '';
     this.transcribeJobData = '';
-    this.transcriptionResults = '';
+    this.transcribeJobResults = '';
     this.updateView = this.updateView.bind(this);
     this.handleFileSelectionSubmit = this.handleFileSelectionSubmit.bind(this);
     this.handleBack = this.handleBack.bind(this);
@@ -59,6 +59,15 @@ class App extends Component {
       currentView = (
         <TranscriptionJobResults
           transcribeJobData={this.transcribeJobData}
+          checkTranscribeJobStatus={this.checkTranscribeJobStatus}
+        />
+      );
+    }
+    if (currentPhase === 'transcribeJobComplete') {
+      currentView = (
+        <TranscriptionJobResults
+          transcribeJobData={this.transcribeJobData}
+          transcribeJobResults={this.transcribeJobResults}
           checkTranscribeJobStatus={this.checkTranscribeJobStatus}
         />
       );
@@ -170,8 +179,10 @@ class App extends Component {
             setTimeout(() => { this.checkTranscribeJobStatus(); }, 30000);
           }
           if (response.data.TranscriptionJob.TranscriptionJobStatus === 'COMPLETED') {
-            this.transcriptionResults = response.data;
-            console.log(this.transcriptionResults);
+            this.transcribeJobResults = response.data;
+            this.setState({
+              currentPhase: 'transcribeJobComplete',
+            });
           }
           if (response.data.TranscriptionJob.TranscriptionJobStatus === 'FAILED') {
             throw new Error('ERROR (Transcription Failed): ', response.data.TranscriptionJob.FailureReason);
