@@ -15,7 +15,6 @@ app.use(bodyParser.json());
 app.options('/*', (req, res) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.append('Access-Control-Allow-Headers', 'Content-Type');
-  console.log('An OPTIONS network request was recieved.');
   res.status(200).send();
 });
 
@@ -66,9 +65,5 @@ app.post('/downloadTranscription', (req, res) => {
     })
     .catch(pullTranscriptionError => res.status(500).send('ERROR: Pull Transcription Error: ', pullTranscriptionError));
 });
-
-// app.post('/audio', (req, res) => {
-//   res.send(500).send(res.locals.transcriptionResults);
-// });
 
 app.listen(3001, () => console.log('Server is listening on port 3001!'));

@@ -22,7 +22,6 @@ const uploadAudio = file => new Promise((resolve, reject) => {
   const s3UploadPromise = s3.upload(objectParams, options).promise();
   s3UploadPromise
     .then((uploadData) => {
-      console.log('SUCCESS: File Uploaded: ', uploadData);
       resolve(uploadData);
     })
     .catch(uploadErr => reject(uploadErr));
@@ -38,8 +37,7 @@ const pullTranscription = transcriptLocation => new Promise((resolve, reject) =>
   const s3pullPromise = s3.getObject(objectParams).promise();
   s3pullPromise
     .then((pullData) => {
-      console.log('SUCCESS: File Read: ', pullData.Body.toString());
-      resolve(pullData);
+      resolve(JSON.parse(pullData.Body.toString()));
     })
     .catch(pullError => reject(pullError));
 });

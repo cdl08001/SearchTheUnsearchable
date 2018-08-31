@@ -201,6 +201,7 @@ class App extends Component {
       })
         .then((response) => {
           console.log(response);
+          console.log(JSON.parse(response));
         })
         .catch((error) => {
           throw new Error('ERROR (Downloading Transcription): ', error);
