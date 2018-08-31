@@ -36,7 +36,6 @@ app.post('/hash', (req, res) => {
 });
 
 app.post('/S3Upload', (req, res) => {
-  console.log('The request body is: ', req.body)
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   uploadAudio(req.body.uploadFile)
     .then((uploadFileData) => {
@@ -45,23 +44,23 @@ app.post('/S3Upload', (req, res) => {
     .catch(uploadFileError => res.status(500).send('ERROR: File Upload Error: ', uploadFileError));
 });
 
-// app.post('/audio', (req, res, next) => {
-//   submitTranscriptionJob(res.locals.uploadFileData)
-//     .then((transcriptionJobData) => {
-//       res.locals.transcriptionJobData = transcriptionJobData;
-//       next();
-//     })
-//     .catch(submitTranscriptionJobError => res.status(500).send('ERROR: Job Submission Error: ', submitTranscriptionJobError));
-// });
+app.post('/submitTranscribeJob', (req, res) => {
+  res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+  submitTranscriptionJob(req.body.uploadFile)
+    .then((transcribeJobData) => {
+      res.status(200).send(transcribeJobData);
+    })
+    .catch(submitTranscriptionJobError => res.status(500).send('ERROR: Job Submission Error: ', submitTranscriptionJobError));
+});
 
-// app.post('/audio', (req, res, next) => {
-//   checkTranscriptionStatus(res.locals.transcriptionJobData)
-//     .then((transcriptionStatusData) => {
-//       res.locals.transcriptionStatusData = transcriptionStatusData;
-//       next();
-//     })
-//     .catch(checkTranscriptionStatusError => res.status(500).send('ERROR: Check Transcription Status Error: ', checkTranscriptionStatusError));
-// });
+app.post('/checkTranscribeStatus', (req, res) => {
+  res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+  checkTranscriptionStatus(req.body.transcribeJobData)
+    .then((transcriptionStatusData) => {
+      res.status(200).send(transcriptionStatusData);
+    })
+    .catch(checkTranscriptionStatusError => res.status(500).send('ERROR: Check Transcription Status Error: ', checkTranscriptionStatusError));
+});
 
 // app.post('/audio', (req, res, next) => {
 //   pullTranscription(res.locals.transcriptionStatusData)

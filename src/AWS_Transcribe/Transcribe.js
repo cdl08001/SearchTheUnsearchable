@@ -23,7 +23,6 @@ const submitTranscriptionJob = S3UploadData => new Promise((resolve, reject) => 
   const startTranscriptionPromise = transcribeService.startTranscriptionJob(objectParams).promise();
   startTranscriptionPromise
     .then((jobData) => {
-      console.log('SUCCESS: Transcription Job Submitted: ', jobData);
       resolve(jobData, S3UploadData);
     })
     .catch(jobSubmitErr => reject(jobSubmitErr));
@@ -36,17 +35,7 @@ const checkTranscriptionStatus = jobData => new Promise((resolve, reject) => {
   const transcribeServicePromise = transcribeService.getTranscriptionJob(objectParams).promise();
   transcribeServicePromise
     .then((data) => {
-      if (data.TranscriptionJob.TranscriptionJobStatus === 'FAILED') {
-        reject(data.TranscriptionJob.FailureReason);
-      }
-      if (data.TranscriptionJob.TranscriptionJobStatus === 'IN_PROGRESS') {
-        console.log('WAITING: The job is still in progress. Will retry in 30 seconds.');
-        setTimeout(() => { checkTranscriptionStatus(jobData); }, 30000);
-      }
-      if (data.TranscriptionJob.TranscriptionJobStatus === 'COMPLETED') {
-        console.log('COMPLETE: The transcription job has completed:', data);
-        resolve(data);
-      }
+      resolve(data);
     })
     .catch(transcriptionErr => reject(transcriptionErr));
 });

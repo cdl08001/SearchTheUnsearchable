@@ -5,6 +5,7 @@ import axios from 'axios';
 import FileSelector from './Components/FileSelector';
 import FileMetadataResults from './Components/FileMetadataResults';
 import S3UploadResults from './Components/S3UploadResults';
+import TranscriptionJobResults from './Components/TranscriptionJobResults';
 
 const baseUrl = 'http://localhost:3001';
 
@@ -16,10 +17,14 @@ class App extends Component {
     };
     this.hashcodeResults = '';
     this.s3UploadData = '';
+    this.transcribeJobData = '';
+    this.transcribeJobResults = '';
     this.updateView = this.updateView.bind(this);
     this.handleFileSelectionSubmit = this.handleFileSelectionSubmit.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleS3UploadSubmit = this.handleS3UploadSubmit.bind(this);
+    this.handleTranscribeJobSubmit = this.handleTranscribeJobSubmit.bind(this);
+    this.checkTranscribeJobStatus = this.checkTranscribeJobStatus.bind(this);
   }
 
   updateView() {
@@ -45,6 +50,25 @@ class App extends Component {
       currentView = (
         <S3UploadResults
           s3UploadData={this.s3UploadData}
+          handleBack={this.handleBack}
+          handleTranscribeJobSubmit={this.handleTranscribeJobSubmit}
+        />
+      );
+    }
+    if (currentPhase === 'transcribeJobSubmitted') {
+      currentView = (
+        <TranscriptionJobResults
+          transcribeJobData={this.transcribeJobData}
+          checkTranscribeJobStatus={this.checkTranscribeJobStatus}
+        />
+      );
+    }
+    if (currentPhase === 'transcribeJobComplete') {
+      currentView = (
+        <TranscriptionJobResults
+          transcribeJobData={this.transcribeJobData}
+          transcribeJobResults={this.transcribeJobResults}
+          checkTranscribeJobStatus={this.checkTranscribeJobStatus}
         />
       );
     }
@@ -55,9 +79,10 @@ class App extends Component {
     const { currentPhase } = this.state;
     event.preventDefault();
     if (currentPhase === 'hashCodeGenerated') {
-      this.setState({
-        currentPhase: null,
-      });
+      this.setState({ currentPhase: null });
+    }
+    if (currentPhase === 's3UploadComplete') {
+      this.setState({ currentPhase: 'hashCodeGenerated' });
     }
   }
 
@@ -110,6 +135,61 @@ class App extends Component {
         })
         .catch((error) => {
           throw new Error('ERROR (S3 Upload): ', error);
+        });
+    }
+  }
+
+  // Step 3: Initiate transcription job:
+  handleTranscribeJobSubmit() {
+    if (this.s3UploadData !== '') {
+      axios({
+        method: 'post',
+        url: `${baseUrl}/submitTranscribeJob`,
+        data: {
+          uploadFile: this.s3UploadData,
+        },
+      })
+        .then((response) => {
+          this.transcribeJobData = response.data;
+          this.setState({
+            currentPhase: 'transcribeJobSubmitted',
+          });
+        })
+        .catch((error) => {
+          throw new Error('ERROR (Transcription Job): ', error);
+        });
+    }
+  }
+
+  // Step 4: Check transcription job status.
+  // if transcription results have not been saved, continue to
+  // check until job is completed.
+  checkTranscribeJobStatus() {
+    if (this.transcriptionResults === '') {
+      axios({
+        method: 'post',
+        url: `${baseUrl}/checkTranscribeStatus`,
+        data: {
+          transcribeJobData: this.transcribeJobData,
+        },
+      })
+        .then((response) => {
+          if (response.data.TranscriptionJob.TranscriptionJobStatus === 'IN_PROGRESS') {
+            console.log('Checking...');
+            setTimeout(() => { this.checkTranscribeJobStatus(); }, 30000);
+          }
+          if (response.data.TranscriptionJob.TranscriptionJobStatus === 'COMPLETED') {
+            this.transcribeJobResults = response.data;
+            this.setState({
+              currentPhase: 'transcribeJobComplete',
+            });
+          }
+          if (response.data.TranscriptionJob.TranscriptionJobStatus === 'FAILED') {
+            throw new Error('ERROR (Transcription Failed): ', response.data.TranscriptionJob.FailureReason);
+          }
+        })
+        .catch((error) => {
+          throw new Error('ERROR (Check Job Status): ', error);
         });
     }
   }

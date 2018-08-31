@@ -39,7 +39,7 @@ FileMetadataResults.propTypes = {
     lastModifiedDate: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired,
-    size: PropTypes.string.isRequired,
+    size: PropTypes.number.isRequired,
     type: PropTypes.string.isRequired,
   }).isRequired,
   handleBack: PropTypes.func.isRequired,
