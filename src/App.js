@@ -19,12 +19,14 @@ class App extends Component {
     this.s3UploadData = '';
     this.transcribeJobData = '';
     this.transcribeJobResults = '';
+    this.transcription = '';
     this.updateView = this.updateView.bind(this);
     this.handleFileSelectionSubmit = this.handleFileSelectionSubmit.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleS3UploadSubmit = this.handleS3UploadSubmit.bind(this);
     this.handleTranscribeJobSubmit = this.handleTranscribeJobSubmit.bind(this);
     this.checkTranscribeJobStatus = this.checkTranscribeJobStatus.bind(this);
+    this.handleTranscriptionDownload = this.handleTranscriptionDownload.bind(this);
   }
 
   updateView() {
@@ -182,6 +184,25 @@ class App extends Component {
         })
         .catch((error) => {
           throw new Error('ERROR (Check Job Status): ', error);
+        });
+    }
+  }
+
+  // Step 5: Handle transcription Job Download:
+  handleTranscriptionDownload() {
+    if (this.transcription === '') {
+      axios({
+        method: 'post',
+        url: `${baseUrl}/downloadTranscription`,
+        data: {
+          transcribeJobData: this.transcribeJobResults,
+        },
+      })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          throw new Error('ERROR (Downloading Transcription): ', error);
         });
     }
   }
