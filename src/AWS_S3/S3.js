@@ -28,12 +28,12 @@ const uploadAudio = file => new Promise((resolve, reject) => {
     .catch(uploadErr => reject(uploadErr));
 });
 
-const pullTranscription = transcriptionResults => new Promise((resolve, reject) => {
+const pullTranscription = transcriptLocation => new Promise((resolve, reject) => {
   const s3 = new AWS.S3();
-  const transcriptLocation = transcriptionResults.TranscriptionJob.Transcript.TranscriptFileUri;
+  const transcript = transcriptLocation;
   const objectParams = {
     Bucket: myBucket,
-    Key: transcriptLocation.split('/')[4],
+    Key: transcript.split('/')[4],
   };
   const s3pullPromise = s3.getObject(objectParams).promise();
   s3pullPromise

@@ -190,12 +190,13 @@ class App extends Component {
 
   // Step 5: Handle transcription Job Download:
   handleTranscriptionDownload() {
+    const transcript = this.transcribeJobResults.TranscriptionJob.Transcript.TranscriptFileUri;
     if (this.transcription === '') {
       axios({
         method: 'post',
         url: `${baseUrl}/downloadTranscription`,
         data: {
-          transcribeJobData: this.transcribeJobResults,
+          transcriptLocation: transcript,
         },
       })
         .then((response) => {
