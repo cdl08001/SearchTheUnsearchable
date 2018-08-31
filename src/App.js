@@ -63,6 +63,7 @@ class App extends Component {
           transcribeJobData={this.transcribeJobData}
           transcribeJobResults={this.transcribeJobResults}
           checkTranscribeJobStatus={this.checkTranscribeJobStatus}
+          handleTranscriptionDownload={this.hanldeTranscriptionDownload}
         />
       );
     }

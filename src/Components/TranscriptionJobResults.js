@@ -37,6 +37,7 @@ function TranscriptionJobResults(props) {
 
   if (transcribeJobResults !== '') {
     const { TranscriptionJob } = transcribeJobResults;
+    const { handleTranscriptionDownload } = props;
     const { Transcript } = TranscriptionJob;
     const { TranscriptFileUri } = Transcript;
     const {
@@ -65,6 +66,7 @@ function TranscriptionJobResults(props) {
         <h3>
           The transcription results are ready for download.
         </h3>
+        <button type="submit" className="btn btn-primary" onClick={handleTranscriptionDownload}>Download</button>
       </div>
     );
   }
@@ -74,6 +76,7 @@ function TranscriptionJobResults(props) {
 
 TranscriptionJobResults.propTypes = {
   checkTranscribeJobStatus: PropTypes.func.isRequired,
+  handleTranscriptionDownload: PropTypes.func,
   transcribeJobData: PropTypes.shape({
     TranscriptionJob: PropTypes.shape({
       CreationTime: PropTypes.string.isRequired,
