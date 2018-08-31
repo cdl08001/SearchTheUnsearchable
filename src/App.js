@@ -55,15 +55,7 @@ class App extends Component {
         />
       );
     }
-    if (currentPhase === 'transcribeJobSubmitted') {
-      currentView = (
-        <TranscriptionJobResults
-          transcribeJobData={this.transcribeJobData}
-          checkTranscribeJobStatus={this.checkTranscribeJobStatus}
-        />
-      );
-    }
-    if (currentPhase === 'transcribeJobComplete') {
+    if (currentPhase === 'transcribeJobSubmitted' || currentPhase === 'transcribeJobComplete') {
       currentView = (
         <TranscriptionJobResults
           transcribeJobData={this.transcribeJobData}
@@ -165,7 +157,7 @@ class App extends Component {
   // if transcription results have not been saved, continue to
   // check until job is completed.
   checkTranscribeJobStatus() {
-    if (this.transcriptionResults === '') {
+    if (this.transcribeJobResults === '') {
       axios({
         method: 'post',
         url: `${baseUrl}/checkTranscribeStatus`,
