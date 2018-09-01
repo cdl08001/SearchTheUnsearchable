@@ -4,13 +4,9 @@ const bodyParser = require('body-parser');
 
 const calculateSHA256 = require('../Hash/HashGeneration');
 
-const { uploadAudio } = require('../AWS_S3/S3.js');
+const { uploadAudio, pullTranscription } = require('../AWS_S3/S3.js');
 
-const {
-  submitTranscriptionJob,
-  checkTranscriptionStatus,
-  pullTranscription,
-} = require('../AWS_Transcribe/Transcribe.js');
+const { submitTranscriptionJob, checkTranscriptionStatus } = require('../AWS_Transcribe/Transcribe.js');
 
 const app = express();
 
@@ -19,7 +15,6 @@ app.use(bodyParser.json());
 app.options('/*', (req, res) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.append('Access-Control-Allow-Headers', 'Content-Type');
-  console.log('An OPTIONS network request was recieved.');
   res.status(200).send();
 });
 
@@ -62,17 +57,15 @@ app.post('/checkTranscribeStatus', (req, res) => {
     .catch(checkTranscriptionStatusError => res.status(500).send('ERROR: Check Transcription Status Error: ', checkTranscriptionStatusError));
 });
 
-// app.post('/audio', (req, res, next) => {
-//   pullTranscription(res.locals.transcriptionStatusData)
-//     .then((transcriptionResults) => {
-//       res.locals.transcriptionResults = transcriptionResults;
-//       next();
-//     })
-//     .catch(pullTranscriptionError => res.status(500).send('ERROR: Pull Transcription Error: ', pullTranscriptionError));
-// });
-
-// app.post('/audio', (req, res) => {
-//   res.send(500).send(res.locals.transcriptionResults);
-// });
+app.post('/downloadTranscription', (req, res) => {
+  res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+  pullTranscription(req.body.transcriptLocation)
+    .then((transcriptionResults) => {
+      res.status(200).send(transcriptionResults);
+    })
+    .catch((pullTranscriptionError) => {
+      res.status(500).send('ERROR: Pull Transcription Error: ', pullTranscriptionError);
+    });
+});
 
 app.listen(3001, () => console.log('Server is listening on port 3001!'));

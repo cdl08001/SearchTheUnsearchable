@@ -6,6 +6,7 @@ import FileSelector from './Components/FileSelector';
 import FileMetadataResults from './Components/FileMetadataResults';
 import S3UploadResults from './Components/S3UploadResults';
 import TranscriptionJobResults from './Components/TranscriptionJobResults';
+import TranscriptionDownloadResults from './Components/TranscriptionDownloadResults';
 
 const baseUrl = 'http://localhost:3001';
 
@@ -19,12 +20,14 @@ class App extends Component {
     this.s3UploadData = '';
     this.transcribeJobData = '';
     this.transcribeJobResults = '';
+    this.transcriptionData = '';
     this.updateView = this.updateView.bind(this);
     this.handleFileSelectionSubmit = this.handleFileSelectionSubmit.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleS3UploadSubmit = this.handleS3UploadSubmit.bind(this);
     this.handleTranscribeJobSubmit = this.handleTranscribeJobSubmit.bind(this);
     this.checkTranscribeJobStatus = this.checkTranscribeJobStatus.bind(this);
+    this.handleTranscriptionDownload = this.handleTranscriptionDownload.bind(this);
   }
 
   updateView() {
@@ -55,20 +58,21 @@ class App extends Component {
         />
       );
     }
-    if (currentPhase === 'transcribeJobSubmitted') {
-      currentView = (
-        <TranscriptionJobResults
-          transcribeJobData={this.transcribeJobData}
-          checkTranscribeJobStatus={this.checkTranscribeJobStatus}
-        />
-      );
-    }
-    if (currentPhase === 'transcribeJobComplete') {
+    if (currentPhase === 'transcribeJobSubmitted' || currentPhase === 'transcribeJobComplete') {
       currentView = (
         <TranscriptionJobResults
           transcribeJobData={this.transcribeJobData}
           transcribeJobResults={this.transcribeJobResults}
           checkTranscribeJobStatus={this.checkTranscribeJobStatus}
+          handleTranscriptionDownload={this.handleTranscriptionDownload}
+        />
+      );
+    }
+    if (currentPhase === 'transcriptionDownloadComplete') {
+      currentView = (
+        <TranscriptionDownloadResults
+          transcriptionData={this.transcriptionData.results.transcripts}
+          hashcodeResults={this.hashcodeResults}
         />
       );
     }
@@ -165,7 +169,7 @@ class App extends Component {
   // if transcription results have not been saved, continue to
   // check until job is completed.
   checkTranscribeJobStatus() {
-    if (this.transcriptionResults === '') {
+    if (this.transcribeJobResults === '') {
       axios({
         method: 'post',
         url: `${baseUrl}/checkTranscribeStatus`,
@@ -190,6 +194,29 @@ class App extends Component {
         })
         .catch((error) => {
           throw new Error('ERROR (Check Job Status): ', error);
+        });
+    }
+  }
+
+  // Step 5: Handle transcription Job Download:
+  handleTranscriptionDownload() {
+    const transcript = this.transcribeJobResults.TranscriptionJob.Transcript.TranscriptFileUri;
+    if (this.transcriptionData === '') {
+      axios({
+        method: 'post',
+        url: `${baseUrl}/downloadTranscription`,
+        data: {
+          transcriptLocation: transcript,
+        },
+      })
+        .then((response) => {
+          this.transcriptionData = response.data;
+          this.setState({
+            currentPhase: 'transcriptionDownloadComplete',
+          });
+        })
+        .catch((error) => {
+          throw new Error('ERROR (Downloading Transcription): ', error);
         });
     }
   }
