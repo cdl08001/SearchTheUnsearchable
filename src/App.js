@@ -6,6 +6,7 @@ import FileSelector from './Components/FileSelector';
 import FileMetadataResults from './Components/FileMetadataResults';
 import S3UploadResults from './Components/S3UploadResults';
 import TranscriptionJobResults from './Components/TranscriptionJobResults';
+import TranscriptionDownloadResults from './Components/TranscriptionDownloadResults';
 
 const baseUrl = 'http://localhost:3001';
 
@@ -19,7 +20,7 @@ class App extends Component {
     this.s3UploadData = '';
     this.transcribeJobData = '';
     this.transcribeJobResults = '';
-    this.transcription = '';
+    this.transcriptionData = '';
     this.updateView = this.updateView.bind(this);
     this.handleFileSelectionSubmit = this.handleFileSelectionSubmit.bind(this);
     this.handleBack = this.handleBack.bind(this);
@@ -63,13 +64,16 @@ class App extends Component {
           transcribeJobData={this.transcribeJobData}
           transcribeJobResults={this.transcribeJobResults}
           checkTranscribeJobStatus={this.checkTranscribeJobStatus}
-          handleTranscriptionDownload={this.hanldeTranscriptionDownload}
+          handleTranscriptionDownload={this.handleTranscriptionDownload}
         />
       );
     }
     if (currentPhase === 'transcriptionDownloadComplete') {
       currentView = (
-        <TranscriptionDownloadResults />
+        <TranscriptionDownloadResults
+          transcriptionData={this.transcriptionData.results.transcripts}
+          hashcodeResults={this.hashcodeResults}
+        />
       );
     }
     return currentView;
@@ -197,7 +201,7 @@ class App extends Component {
   // Step 5: Handle transcription Job Download:
   handleTranscriptionDownload() {
     const transcript = this.transcribeJobResults.TranscriptionJob.Transcript.TranscriptFileUri;
-    if (this.transcription === '') {
+    if (this.transcriptionData === '') {
       axios({
         method: 'post',
         url: `${baseUrl}/downloadTranscription`,
@@ -206,8 +210,7 @@ class App extends Component {
         },
       })
         .then((response) => {
-          console.log(response);
-          this.transcription = response.data;
+          this.transcriptionData = response.data;
           this.setState({
             currentPhase: 'transcriptionDownloadComplete',
           });

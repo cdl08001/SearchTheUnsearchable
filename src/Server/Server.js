@@ -61,9 +61,11 @@ app.post('/downloadTranscription', (req, res) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   pullTranscription(req.body.transcriptLocation)
     .then((transcriptionResults) => {
-      res.status(500).send(transcriptionResults);
+      res.status(200).send(transcriptionResults);
     })
-    .catch(pullTranscriptionError => res.status(500).send('ERROR: Pull Transcription Error: ', pullTranscriptionError));
+    .catch((pullTranscriptionError) => {
+      res.status(500).send('ERROR: Pull Transcription Error: ', pullTranscriptionError);
+    });
 });
 
 app.listen(3001, () => console.log('Server is listening on port 3001!'));
