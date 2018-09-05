@@ -2,25 +2,43 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
+// Open default mongoose  27017
+mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true }, (error) => {
+  if (error) throw new Error('ERROR (DB Connection): ', error);
+});
+
+const db = mongoose.connection;
+
 const hashSchema = new Schema({
   hashcode: String,
   name: String,
   path: String,
-  lastModifiedDate: String,
+  lastModifiedDate: Date,
   size: Number,
   type: String,
 });
 
 const transcriptionResultsSchema = new Schema({
   hashcode: String,
-  contentLength: String,
-  transcription: String,
+  transcripts: [{
+    transcript: String,
+  }],
+  items: [{
+    start_time: String,
+    end_time: String,
+    alternatives: [{
+      confidence: String,
+      content: String,
+    }],
+  }],
+  type: String,
 });
 
-mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true });
+const Hash = mongoose.model('FileHashes', hashSchema);
+const TranscriptResult = mongoose.model('TranscriptResult', transcriptionResultsSchema);
 
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {
-  console.log('Connected!');
-});
+module.exports = {
+  Hash,
+  TranscriptResult,
+  db,
+};
