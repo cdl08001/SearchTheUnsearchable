@@ -37,6 +37,7 @@ const pullTranscription = transcriptLocation => new Promise((resolve, reject) =>
   const s3pullPromise = s3.getObject(objectParams).promise();
   s3pullPromise
     .then((pullData) => {
+      console.log(pullData)
       resolve(JSON.parse(pullData.Body.toString()));
     })
     .catch(pullError => reject(pullError));
