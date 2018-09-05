@@ -19,6 +19,7 @@
     "bootstrap": "^3.3.7",
     "express": "^4.16.3",
     "mongodb": "^3.1.4",
+    "mongoose": "^5.2.13",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-bootstrap": "^0.32.1",
@@ -42,7 +43,8 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "electron": "electron .",
-    "server": "nodemon src/Server/Server.js"
+    "server": "nodemon src/Server/Server.js",
+    "database": "mongod --dbpath=/Users/calinlewis/Desktop/Personal_Projects/SearchTheUnsearchable/src/Database/__db"
   },
   "main": "src/electron-starter.js"
 }
