@@ -111,10 +111,16 @@ class App extends Component {
       },
     })
       .then((response) => {
-        this.hashcodeResults = response.data;
-        this.setState({
-          currentPhase: 'hashCodeGenerated',
-        });
+        if (response.data.inDatabase === false) {
+          this.hashcodeResults = response.data.hashResult;
+          this.setState({
+            currentPhase: 'hashCodeGenerated',
+          });
+        } else {
+          this.setState({
+            currentPhase: 'transcriptionDownloadComplete',
+          });
+        }
       })
       .catch((error) => {
         throw new Error('ERROR (Hascode Generation): ', error);

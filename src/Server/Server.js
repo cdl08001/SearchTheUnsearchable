@@ -27,7 +27,6 @@ app.post('/hash', (req, res, next) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   calculateSHA256(req.body.audioFiles[0])
     .then((hashFileData) => {
-      console.log('HashFileData: ', hashFileData);
       res.locals.hashFileData = hashFileData;
       next();
     })
@@ -35,14 +34,24 @@ app.post('/hash', (req, res, next) => {
 });
 
 app.post('/hash', (req, res) => {
-  console.log('Passed-down data: ', res.locals.hashFileData);
   findHash(res.locals.hashFileData.hashcode, (queryResult) => {
     if (queryResult.length > 0) {
-      console.log('No Matching Hash');
-      res.status(200).send(res.locals.hashFileData);
+      res.locals.queryResult = queryResult;
+      res.status(200).send({
+        inDatabase: true,
+        result: queryResult[0],
+      });
     } else {
-      console.log('Matching Hash');
-      res.status(200).send(queryResult[0]);
+      const hd = res.locals.hashFileData;
+      addHash(hd.hashcode, hd.name, hd.path, hd.lastModifiedDate, hd.size, hd.type)
+        .then((data) => {
+          console.log('savedata: ', data);
+          res.status(200).send({
+            inDatabase: false,
+            result: hd,
+          });
+        })
+        .catch(hashSaveErr => res.status(500).send('ERROR: Saving Hash: ', hashSaveErr));
     }
   });
 });
