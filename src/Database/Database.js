@@ -37,7 +37,7 @@ const TranscriptResult = mongoose.model('TranscriptResult', transcriptionResults
 
 const addHash = (hashcode, name, path, lastModifiedDate, size, type) => {
   const db = mongoose.connection;
-  db.on('error', console.error.bind(console, 'connection error:'));
+  db.on('error', () => { throw new Error('ERROR: (DB Connection) '); });
   db.once('open', () => {
     const newHash = new Hash({
       hashcode,
@@ -57,7 +57,7 @@ const addHash = (hashcode, name, path, lastModifiedDate, size, type) => {
 
 const addTranscription = (hashcode, transcripts, items, type) => {
   const db = mongoose.connection;
-  db.on('error', console.error.bind(console, 'connection error:'));
+  db.on('error', () => { throw new Error('ERROR: (DB Connection) '); });
   db.once('open', () => {
     const newTranscript = new TranscriptResult({
       hashcode,
@@ -72,7 +72,21 @@ const addTranscription = (hashcode, transcripts, items, type) => {
   });
 };
 
+const findHash = (targetHash, cb) => {
+  const db = mongoose.connection;
+  db.on('error', () => { throw new Error('ERROR: (DB Connection) '); });
+  db.once('open', () => {
+    Hash.find({ hashcode: targetHash }, (err, docs) => {
+      if (err) throw new Error('ERROR (Find Documents): ', err);
+      console.log('Results: ', docs);
+      cb(docs);
+      db.close();
+    });
+  });
+};
+
 module.exports = {
   addHash,
   addTranscription,
+  findHash,
 };
