@@ -6,6 +6,8 @@ const calculateSHA256 = require('../Hash/HashGeneration');
 
 const { uploadAudio, pullTranscription } = require('../AWS_S3/S3.js');
 
+const { addHash, addTranscription, findHash } = require('../Database/Database.js');
+
 const { submitTranscriptionJob, checkTranscriptionStatus } = require('../AWS_Transcribe/Transcribe.js');
 
 const app = express();
@@ -21,14 +23,28 @@ app.options('/*', (req, res) => {
 // Calculate hashcode and send back to client
 // Client should restrict the number of selected files to 1 until handling of
 // multiple files can be supported
-app.post('/hash', (req, res) => {
+app.post('/hash', (req, res, next) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   calculateSHA256(req.body.audioFiles[0])
     .then((hashFileData) => {
       console.log('HashFileData: ', hashFileData);
-      res.status(200).send(hashFileData);
+      res.locals.hashFileData = hashFileData;
+      next();
     })
     .catch(hashError => res.status(500).send('ERROR: Hash Calculation Error: ', hashError));
+});
+
+app.post('/hash', (req, res) => {
+  console.log('Passed-down data: ', res.locals.hashFileData);
+  findHash(res.locals.hashFileData.hashcode, (queryResult) => {
+    if (queryResult.length > 0) {
+      console.log('No Matching Hash');
+      res.status(200).send(res.locals.hashFileData);
+    } else {
+      console.log('Matching Hash');
+      res.status(200).send(queryResult[0]);
+    }
+  });
 });
 
 app.post('/S3Upload', (req, res) => {

@@ -2,11 +2,6 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-// Open default mongoose  27017
-mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true }, (error) => {
-  if (error) throw new Error('ERROR (DB Connection): ', error);
-});
-
 const hashSchema = new Schema({
   hashcode: String,
   name: String,
@@ -36,6 +31,9 @@ const Hash = mongoose.model('FileHashes', hashSchema);
 const TranscriptResult = mongoose.model('TranscriptResult', transcriptionResultsSchema);
 
 const addHash = (hashcode, name, path, lastModifiedDate, size, type) => {
+  mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true }, (error) => {
+    if (error) throw new Error('ERROR (DB Connection): ', error);
+  });
   const db = mongoose.connection;
   db.on('error', () => { throw new Error('ERROR: (DB Connection) '); });
   db.once('open', () => {
@@ -56,6 +54,9 @@ const addHash = (hashcode, name, path, lastModifiedDate, size, type) => {
 };
 
 const addTranscription = (hashcode, transcripts, items, type) => {
+  mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true }, (error) => {
+    if (error) throw new Error('ERROR (DB Connection): ', error);
+  });
   const db = mongoose.connection;
   db.on('error', () => { throw new Error('ERROR: (DB Connection) '); });
   db.once('open', () => {
@@ -73,6 +74,9 @@ const addTranscription = (hashcode, transcripts, items, type) => {
 };
 
 const findHash = (targetHash, cb) => {
+  mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true }, (error) => {
+    if (error) throw new Error('ERROR (DB Connection): ', error);
+  });
   const db = mongoose.connection;
   db.on('error', () => { throw new Error('ERROR: (DB Connection) '); });
   db.once('open', () => {
