@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+mongoose.Promise = global.Promise;
+
 const { Schema } = mongoose;
 
 const hashSchema = new Schema({
@@ -30,28 +32,47 @@ const transcriptionResultsSchema = new Schema({
 const Hash = mongoose.model('FileHashes', hashSchema);
 const TranscriptResult = mongoose.model('TranscriptResult', transcriptionResultsSchema);
 
-const addHash = (hashcode, name, path, lastModifiedDate, size, type) => {
-  mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true }, (error) => {
-    if (error) throw new Error('ERROR (DB Connection): ', error);
-  });
-  const db = mongoose.connection;
-  db.on('error', () => { throw new Error('ERROR: (DB Connection) '); });
-  db.once('open', () => {
-    const newHash = new Hash({
-      hashcode,
-      name,
-      path,
-      lastModifiedDate,
-      size,
-      type,
+const findHash = targetHash => new Promise((resolve, reject) => {
+  mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true })
+    .then(() => {
+      const findPromise = Hash.find({ hashcode: targetHash }).exec();
+      findPromise
+        .then((queryResult) => {
+          resolve(queryResult);
+          mongoose.connection.close();
+        })
+        .catch((err) => {
+          reject(err);
+          mongoose.connection.close();
+        });
+    })
+    .catch(connectErr => reject(connectErr));
+});
+
+const addHash = (hashcode, name, path, lastModifiedDate, size, type) => new Promise((resolve, reject) => {
+  mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true })
+    .then(() => {
+      const newHash = new Hash({
+        hashcode,
+        name,
+        path,
+        lastModifiedDate,
+        size,
+        type,
+      });
+      const addHashPromise = newHash.save();
+      addHashPromise
+        .then((data) => {
+          resolve(data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    })
+    .catch((connectErr) => {
+      reject(connectErr);
     });
-    newHash.save((err) => {
-      if (err) throw new Error('ERROR (DB Save): ', err);
-      console.log('SUCCESS (Hash Saved)');
-      db.close();
-    });
-  });
-};
+});
 
 const addTranscription = (hashcode, transcripts, items, type) => {
   mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true }, (error) => {
@@ -69,22 +90,6 @@ const addTranscription = (hashcode, transcripts, items, type) => {
     newTranscript.save((err) => {
       if (err) throw new Error('ERROR (DB Save): ', err);
       console.log('SUCCESS (Transcript Saved)');
-    });
-  });
-};
-
-const findHash = (targetHash, cb) => {
-  mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true }, (error) => {
-    if (error) throw new Error('ERROR (DB Connection): ', error);
-  });
-  const db = mongoose.connection;
-  db.on('error', () => { throw new Error('ERROR: (DB Connection) '); });
-  db.once('open', () => {
-    Hash.find({ hashcode: targetHash }, (err, docs) => {
-      if (err) throw new Error('ERROR (Find Documents): ', err);
-      console.log('Results: ', docs);
-      cb(docs);
-      db.close();
     });
   });
 };

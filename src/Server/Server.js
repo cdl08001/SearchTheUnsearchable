@@ -27,24 +27,38 @@ app.post('/hash', (req, res, next) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   calculateSHA256(req.body.audioFiles[0])
     .then((hashFileData) => {
-      console.log('HashFileData: ', hashFileData);
       res.locals.hashFileData = hashFileData;
       next();
     })
-    .catch(hashError => res.status(500).send('ERROR: Hash Calculation Error: ', hashError));
+    .catch(hashError => res.status(500).send(hashError));
+});
+
+app.post('/hash', (req, res, next) => {
+  findHash(res.locals.hashFileData.hashcode)
+    .then((queryResult) => {
+      res.locals.queryResult = queryResult;
+      if (queryResult.length > 0) {
+        res.status(200).send({
+          inDatabase: true,
+          result: queryResult[0],
+        });
+      } else {
+        next();
+      }
+    })
+    .catch(queryErr => res.status(500).send(queryErr));
 });
 
 app.post('/hash', (req, res) => {
-  console.log('Passed-down data: ', res.locals.hashFileData);
-  findHash(res.locals.hashFileData.hashcode, (queryResult) => {
-    if (queryResult.length > 0) {
-      console.log('No Matching Hash');
-      res.status(200).send(res.locals.hashFileData);
-    } else {
-      console.log('Matching Hash');
-      res.status(200).send(queryResult[0]);
-    }
-  });
+  const hd = res.locals.hashFileData;
+  addHash(hd.hashcode, hd.name, hd.path, hd.lastModifiedDate, hd.size, hd.type)
+    .then((data) => {
+      res.status(200).send({
+        inDatabase: false,
+        result: data,
+      });
+    })
+    .catch(hashSaveErr => res.status(500).send(hashSaveErr));
 });
 
 app.post('/S3Upload', (req, res) => {
@@ -54,7 +68,7 @@ app.post('/S3Upload', (req, res) => {
       console.log('UploadFileData: ', uploadFileData);
       res.status(200).send(uploadFileData);
     })
-    .catch(uploadFileError => res.status(500).send('ERROR: File Upload Error: ', uploadFileError));
+    .catch(uploadFileError => res.status(500).send(uploadFileError));
 });
 
 app.post('/submitTranscribeJob', (req, res) => {
@@ -64,7 +78,7 @@ app.post('/submitTranscribeJob', (req, res) => {
       console.log('TranscribeJobData: ', transcribeJobData);
       res.status(200).send(transcribeJobData);
     })
-    .catch(submitTranscriptionJobError => res.status(500).send('ERROR: Job Submission Error: ', submitTranscriptionJobError));
+    .catch(submitTranscriptionJobError => res.status(500).send(submitTranscriptionJobError));
 });
 
 app.post('/checkTranscribeStatus', (req, res) => {
@@ -74,7 +88,7 @@ app.post('/checkTranscribeStatus', (req, res) => {
       console.log('TranscriptionStatusData: ', transcriptionStatusData);
       res.status(200).send(transcriptionStatusData);
     })
-    .catch(checkTranscriptionStatusError => res.status(500).send('ERROR: Check Transcription Status Error: ', checkTranscriptionStatusError));
+    .catch(checkTranscriptionStatusError => res.status(500).send(checkTranscriptionStatusError));
 });
 
 app.post('/downloadTranscription', (req, res) => {
@@ -88,7 +102,7 @@ app.post('/downloadTranscription', (req, res) => {
       res.status(200).send(transcriptionResults);
     })
     .catch((pullTranscriptionError) => {
-      res.status(500).send('ERROR: Pull Transcription Error: ', pullTranscriptionError);
+      res.status(500).send(pullTranscriptionError);
     });
 });
 
