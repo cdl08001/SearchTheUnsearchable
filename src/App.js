@@ -112,7 +112,7 @@ class App extends Component {
     })
       .then((response) => {
         if (response.data.inDatabase === false) {
-          this.hashcodeResults = response.data.hashResult;
+          this.hashcodeResults = response.data.result;
           this.setState({
             currentPhase: 'hashCodeGenerated',
           });

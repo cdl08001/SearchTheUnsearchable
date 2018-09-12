@@ -52,10 +52,10 @@ app.post('/hash', (req, res, next) => {
 app.post('/hash', (req, res) => {
   const hd = res.locals.hashFileData;
   addHash(hd.hashcode, hd.name, hd.path, hd.lastModifiedDate, hd.size, hd.type)
-    .then((data) => {
+    .then((hashCreationData) => {
       res.status(200).send({
         inDatabase: false,
-        result: data,
+        result: hashCreationData,
       });
     })
     .catch(hashSaveErr => res.status(500).send(hashSaveErr));
@@ -65,7 +65,6 @@ app.post('/S3Upload', (req, res) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   uploadAudio(req.body.uploadFile)
     .then((uploadFileData) => {
-      console.log('UploadFileData: ', uploadFileData);
       res.status(200).send(uploadFileData);
     })
     .catch(uploadFileError => res.status(500).send(uploadFileError));
@@ -75,7 +74,6 @@ app.post('/submitTranscribeJob', (req, res) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   submitTranscriptionJob(req.body.uploadFile)
     .then((transcribeJobData) => {
-      console.log('TranscribeJobData: ', transcribeJobData);
       res.status(200).send(transcribeJobData);
     })
     .catch(submitTranscriptionJobError => res.status(500).send(submitTranscriptionJobError));
@@ -85,7 +83,6 @@ app.post('/checkTranscribeStatus', (req, res) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   checkTranscriptionStatus(req.body.transcribeJobData)
     .then((transcriptionStatusData) => {
-      console.log('TranscriptionStatusData: ', transcriptionStatusData);
       res.status(200).send(transcriptionStatusData);
     })
     .catch(checkTranscriptionStatusError => res.status(500).send(checkTranscriptionStatusError));
@@ -95,10 +92,6 @@ app.post('/downloadTranscription', (req, res) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   pullTranscription(req.body.transcriptLocation)
     .then((transcriptionResults) => {
-      console.log('transcriptionResults: ', transcriptionResults);
-      console.log('transcriptionResults.results: ', transcriptionResults.results)
-      console.log('transcriptionResults.results.transcripts: ', transcriptionResults.results.transcripts)
-      console.log('transcriptionResults.results.items: ', transcriptionResults.results.items)
       res.status(200).send(transcriptionResults);
     })
     .catch((pullTranscriptionError) => {
