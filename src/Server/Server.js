@@ -88,15 +88,31 @@ app.post('/checkTranscribeStatus', (req, res) => {
     .catch(checkTranscriptionStatusError => res.status(500).send(checkTranscriptionStatusError));
 });
 
-app.post('/downloadTranscription', (req, res) => {
+app.post('/downloadTranscription', (req, res, next) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+  // Save hashcode results to res.locals in order to leverage when saving transcript results
+  res.locals.hashcode = req.body.hashcode;
+  // Attempt to download transcription from S3
+  // If successful, pass to next middleware to save transcript to db
   pullTranscription(req.body.transcriptLocation)
     .then((transcriptionResults) => {
-      res.status(200).send(transcriptionResults);
+      res.locals.transcriptionResults = transcriptionResults;
+      next();
     })
     .catch((pullTranscriptionError) => {
       res.status(500).send(pullTranscriptionError);
     });
+});
+
+app.post('/downloadTranscription', (req, res) => {
+  const { hashcode } = res.locals;
+  const { transcripts, items } = res.locals.transcriptionResults.results;
+  addTranscription(hashcode, transcripts, items)
+    .then((transcriptionSaveData) => {
+      console.log('TranscriptionSaveData: ', transcriptionSaveData);
+      res.status(200).send(res.locals.transcriptionResults);
+    })
+    .catch(transcriptionSaveErr => res.status(500).send(transcriptionSaveErr));
 });
 
 app.listen(3001, () => console.log('Server is listening on port 3001!'));

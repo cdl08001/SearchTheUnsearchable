@@ -13,6 +13,7 @@ const hashSchema = new Schema({
   type: String,
 });
 
+// wordType needs to be used as 'type' is reserved mongoose name
 const transcriptionResultsSchema = new Schema({
   hashcode: String,
   transcripts: [{
@@ -25,8 +26,8 @@ const transcriptionResultsSchema = new Schema({
       confidence: String,
       content: String,
     }],
+    wordType: String,
   }],
-  type: String,
 });
 
 const Hash = mongoose.model('FileHashes', hashSchema);
@@ -72,14 +73,30 @@ const addHash = (hashcode, name, path, lastModifiedDate, size, type) => new Prom
     .catch(connectErr => reject(connectErr));
 });
 
-const addTranscription = (hashcode, transcripts, items, type) => new Promise((resolve, reject) => {
+const findTranscription = targetHash => new Promise((resolve, reject) => {
+  mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true })
+    .then(() => {
+      const findPromise = Hash.find({ hashcode: targetHash }).exec();
+      findPromise
+        .then((queryResult) => {
+          resolve(queryResult);
+          mongoose.connection.close();
+        })
+        .catch((err) => {
+          reject(err);
+          mongoose.connection.close();
+        });
+    })
+    .catch(connectErr => reject(connectErr));
+});
+
+const addTranscription = (hashcode, transcripts, items) => new Promise((resolve, reject) => {
   mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true })
     .then(() => {
       const newTranscript = new TranscriptResult({
         hashcode,
         transcripts,
         items,
-        type,
       });
       const addTranscriptPromise = newTranscript.save();
       addTranscriptPromise
@@ -97,4 +114,5 @@ module.exports = {
   addHash,
   addTranscription,
   findHash,
+  findTranscription,
 };
