@@ -117,6 +117,8 @@ class App extends Component {
             currentPhase: 'hashCodeGenerated',
           });
         } else {
+          this.hashcodeResults = response.data.result;
+          this.transcriptionData = response.data.transcript;
           this.setState({
             currentPhase: 'transcriptionDownloadComplete',
           });

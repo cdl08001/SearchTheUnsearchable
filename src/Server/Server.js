@@ -52,7 +52,8 @@ app.post('/hash', (req, res, next) => {
 });
 
 // Add hash to db if no matching hash was found.
-// Otherwise, query transcriptions to pull results from db.
+// Otherwise, query transcriptions collection to pull results from db.
+// If successful, format data and send to client.
 app.post('/hash', (req, res) => {
   const hd = res.locals.hashFileData;
   if (res.locals.inDatabase === false) {
@@ -67,12 +68,16 @@ app.post('/hash', (req, res) => {
   } else if (res.locals.inDatabase === true) {
     findTranscription(hd.hashcode)
       .then((transcriptionData) => {
-        console.log('Hashcode Data: ', res.locals.hashFileData)
-        console.log('Transcript Data: ', transcriptionData)
+        res.locals.formattedTranscription = {
+          results: {
+            items: transcriptionData[0].items,
+            transcripts: transcriptionData[0].transcripts,
+          },
+        };
         res.status(200).send({
           inDatabase: res.locals.inDatabase,
           result: res.locals.hashFileData,
-          transcript: transcriptionData,
+          transcript: res.locals.formattedTranscription,
         });
       })
       .catch(queryErr => res.status(500).send(queryErr));
@@ -127,7 +132,6 @@ app.post('/downloadTranscription', (req, res) => {
   const { transcripts, items } = res.locals.transcriptionResults.results;
   addTranscription(hashcode, transcripts, items)
     .then((transcriptionSaveData) => {
-      console.log('TranscriptionSaveData: ', transcriptionSaveData);
       res.status(200).send(res.locals.transcriptionResults);
     })
     .catch(transcriptionSaveErr => res.status(500).send(transcriptionSaveErr));

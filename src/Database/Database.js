@@ -26,7 +26,6 @@ const transcriptionResultsSchema = new Schema({
       confidence: String,
       content: String,
     }],
-    wordType: String,
   }],
 });
 
