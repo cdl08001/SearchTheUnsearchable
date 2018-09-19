@@ -76,7 +76,7 @@ const addHash = (hashcode, name, path, lastModifiedDate, size, type) => new Prom
 const findTranscription = targetHash => new Promise((resolve, reject) => {
   mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true })
     .then(() => {
-      const findPromise = Hash.find({ hashcode: targetHash }).exec();
+      const findPromise = TranscriptResult.find({ hashcode: targetHash }).exec();
       findPromise
         .then((queryResult) => {
           resolve(queryResult);
