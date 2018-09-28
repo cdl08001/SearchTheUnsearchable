@@ -32,6 +32,7 @@ const transcriptionResultsSchema = new Schema({
 const Hash = mongoose.model('FileHashes', hashSchema);
 const TranscriptResult = mongoose.model('TranscriptResult', transcriptionResultsSchema);
 
+// Finds a provided hashcode within the 'filehashes' collection and returns the query result
 const findHash = targetHash => new Promise((resolve, reject) => {
   mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true })
     .then(() => {
@@ -49,6 +50,7 @@ const findHash = targetHash => new Promise((resolve, reject) => {
     .catch(connectErr => reject(connectErr));
 });
 
+// Adds hashcode and file metadata to the 'filehashes' collection and returns the query result
 const addHash = (hashcode, name, path, lastModifiedDate, size, type) => new Promise((resolve, reject) => {
   mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true })
     .then(() => {
@@ -72,6 +74,7 @@ const addHash = (hashcode, name, path, lastModifiedDate, size, type) => new Prom
     .catch(connectErr => reject(connectErr));
 });
 
+// Finds a provided hash within the 'transcriptionresults' collection and returns the query result
 const findTranscription = targetHash => new Promise((resolve, reject) => {
   mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true })
     .then(() => {
@@ -89,7 +92,11 @@ const findTranscription = targetHash => new Promise((resolve, reject) => {
     .catch(connectErr => reject(connectErr));
 });
 
+// Adds hashcode and transcription information to the 'transcriptionresults' collection and returns query result
 const addTranscription = (hashcode, transcripts, items) => new Promise((resolve, reject) => {
+  console.log('Hashcode: ', hashcode)
+  console.log('Transcripts: ', transcripts)
+  console.log('Items: ', items)
   mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true })
     .then(() => {
       const newTranscript = new TranscriptResult({
