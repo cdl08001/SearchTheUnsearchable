@@ -1,5 +1,9 @@
 const express = require('express');
 
+const https = require('https');
+
+const certOptions = require('../../private/__HTTPS.js');
+
 const bodyParser = require('body-parser');
 
 const calculateSHA256 = require('../Hash/HashGeneration');

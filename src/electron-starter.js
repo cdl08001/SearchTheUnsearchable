@@ -1,3 +1,4 @@
+/* eslint-disable */
 const electron = require('electron');
 // Module to control application life.
 const app = electron.app;
@@ -7,23 +8,31 @@ const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
 const url = require('url');
 
+// Used for disabling navigation (see below)
+const URL = require('url').URL
+
+// Used for disabling the creation of new windows
+const { shell } = require('electron')
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
 function createWindow() {
+
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: 800, 
         height: 600,
         webPreferences: {
+            contextIsolation: true,
             nodeIntegration: false,
             preload: './preload.js'
         }
     });
 
     // and load the index.html of the app.
-    mainWindow.loadURL('http://localhost:3000');
+    mainWindow.loadURL('https://localhost:3000');
 
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
@@ -66,5 +75,17 @@ app.on('activate', function () {
     }
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+app.on('web-contents-created', (event, contents) => {
+  contents.on('will-navigate', (event, navigationUrl) => {
+    const parsedUrl = new URL(navigationUrl)  
+    if (parsedUrl.origin !== 'https://localhost:3000/') {
+      event.preventDefault()
+    }
+  })
+  contents.on('new-window', (event, navigationUrl) => {
+    // In this example, we'll ask the operating system
+    // to open this event's url in the default browser.
+    event.preventDefault()
+    shell.openExternal(navigationUrl)
+  })
+})

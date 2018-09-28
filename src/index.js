@@ -8,5 +8,10 @@ import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
+// eslint-disable-next-line
+window.eval = global.eval = function () {
+  throw new Error('Sorry, this app does not support window.eval().');
+};
+
 ReactDOM.render(<App />, document.getElementById('root'));
 registerServiceWorker();
