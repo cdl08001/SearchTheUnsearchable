@@ -8,6 +8,7 @@ AWS.config.update({ region: 'us-east-1' });
 // Create the transcribe service object:
 const transcribeService = new AWS.TranscribeService({ apiVersion: '2017-10-26' });
 
+// Creates a new transcription job and returns jobData on success
 const submitTranscriptionJob = S3UploadData => new Promise((resolve, reject) => {
   const jobId = uuidv4();
   const fileExtension = S3UploadData.key.slice(S3UploadData.key.indexOf('.') + 1);
@@ -28,6 +29,7 @@ const submitTranscriptionJob = S3UploadData => new Promise((resolve, reject) => 
     .catch(jobSubmitErr => reject(jobSubmitErr));
 });
 
+// Checks transcription job status and returns job data on success.
 const checkTranscriptionStatus = jobData => new Promise((resolve, reject) => {
   const objectParams = {
     TranscriptionJobName: jobData.TranscriptionJob.TranscriptionJobName,
