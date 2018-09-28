@@ -20,9 +20,7 @@ app.options('/*', (req, res) => {
   res.status(200).send();
 });
 
-// Calculate hashcode and send back to client
-// Client should restrict the number of selected files to 1 until handling of
-// multiple files can be supported
+// Calculate hashcode, store results to local response variable, move to next '/hash' route
 app.post('/hash', (req, res, next) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   calculateSHA256(req.body.audioFiles[0])
@@ -33,8 +31,9 @@ app.post('/hash', (req, res, next) => {
     .catch(hashError => res.status(500).send(hashError));
 });
 
-// Query the database to see if matching hash exists.
-// Take note of whether or not matching record was found and call next middleware
+// Query database to see if matching hash exists
+// If yes, note in local response variable and move to next '/hash' route.
+// If no, note in local response variable and move to next '/hash' route.
 app.post('/hash', (req, res, next) => {
   findHash(res.locals.hashFileData.hashcode)
     .then((queryResult) => {
@@ -51,8 +50,8 @@ app.post('/hash', (req, res, next) => {
     .catch(queryErr => res.status(500).send(queryErr));
 });
 
-// Add hash to db if no matching hash was found.
-// Otherwise, query transcriptions to pull results from db.
+// If hashcode does not exist in db, add it to db and send data to client once complete
+// If hashcode does exist in db, find the associated transcription and send to client
 app.post('/hash', (req, res) => {
   const hd = res.locals.hashFileData;
   if (res.locals.inDatabase === false) {
@@ -67,18 +66,23 @@ app.post('/hash', (req, res) => {
   } else if (res.locals.inDatabase === true) {
     findTranscription(hd.hashcode)
       .then((transcriptionData) => {
-        console.log('Hashcode Data: ', res.locals.hashFileData)
-        console.log('Transcript Data: ', transcriptionData)
+        res.locals.formattedTranscription = {
+          results: {
+            items: transcriptionData[0].items,
+            transcripts: transcriptionData[0].transcripts,
+          },
+        };
         res.status(200).send({
           inDatabase: res.locals.inDatabase,
           result: res.locals.hashFileData,
-          transcript: transcriptionData,
+          transcript: res.locals.formattedTranscription,
         });
       })
       .catch(queryErr => res.status(500).send(queryErr));
   }
 });
 
+// Upload audio file to S3 and send results to client once complete
 app.post('/S3Upload', (req, res) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   uploadAudio(req.body.uploadFile)
@@ -88,6 +92,7 @@ app.post('/S3Upload', (req, res) => {
     .catch(uploadFileError => res.status(500).send(uploadFileError));
 });
 
+// Submit transcription job and send response to client once complete
 app.post('/submitTranscribeJob', (req, res) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   submitTranscriptionJob(req.body.uploadFile)
@@ -97,6 +102,7 @@ app.post('/submitTranscribeJob', (req, res) => {
     .catch(submitTranscriptionJobError => res.status(500).send(submitTranscriptionJobError));
 });
 
+// Check the transcription status of the current transcription job and send response to client
 app.post('/checkTranscribeStatus', (req, res) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
   checkTranscriptionStatus(req.body.transcribeJobData)
@@ -106,12 +112,12 @@ app.post('/checkTranscribeStatus', (req, res) => {
     .catch(checkTranscriptionStatusError => res.status(500).send(checkTranscriptionStatusError));
 });
 
+// Download transcription from S3
+// Store request hashcode data in local response variable
+// If transcription download is successful, move to next '/downloadTranscription' route
 app.post('/downloadTranscription', (req, res, next) => {
   res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
-  // Save hashcode results to res.locals in order to leverage when saving transcript results
   res.locals.hashcode = req.body.hashcode;
-  // Attempt to download transcription from S3
-  // If successful, pass to next middleware to save transcript to db
   pullTranscription(req.body.transcriptLocation)
     .then((transcriptionResults) => {
       res.locals.transcriptionResults = transcriptionResults;
@@ -122,12 +128,13 @@ app.post('/downloadTranscription', (req, res, next) => {
     });
 });
 
+// Attempt to save the transcript to the database
+// Send transcription data to client once complete.
 app.post('/downloadTranscription', (req, res) => {
   const { hashcode } = res.locals;
   const { transcripts, items } = res.locals.transcriptionResults.results;
   addTranscription(hashcode, transcripts, items)
     .then((transcriptionSaveData) => {
-      console.log('TranscriptionSaveData: ', transcriptionSaveData);
       res.status(200).send(res.locals.transcriptionResults);
     })
     .catch(transcriptionSaveErr => res.status(500).send(transcriptionSaveErr));
