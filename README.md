@@ -35,7 +35,7 @@ Working
 ## Installation
 The first step will be to create a mongodb database called 'searchtheunsearchable', and add the following two collections: 
 
-# filehashes
+### filehashes
 Schema: 
 ```
 const hashSchema = new Schema({
@@ -48,7 +48,7 @@ const hashSchema = new Schema({
 });
 ```
 
-# transcriptionresults
+### transcriptionresults
 Schema:
 ```
 const transcriptionResultsSchema = new Schema({
