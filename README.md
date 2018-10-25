@@ -72,7 +72,11 @@ Once your database has been setup and the respository cloned down to a local mac
 `npm run react`
 `npm run electron`
 `npm run server`
+
+** NOTE: The following script will need to be adjusted within the package.json to point to your specific mongodb configuration: 
+
 `npm run database`
+
 
 ## API Reference
 
