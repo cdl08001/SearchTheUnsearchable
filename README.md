@@ -18,8 +18,6 @@ This application follows the Airbnb JavaScript Style Guide:
 Working
 
 ## Tech/framework used
-Ex. -
-
 <b>Built with</b>
 - [Electron](https://electron.atom.io)
 - [ReactJS](https://reactjs.org/)
