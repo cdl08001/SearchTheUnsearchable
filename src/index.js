@@ -1,5 +1,4 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/css/bootstrap-theme.css';
 // Will need to add something similar to my componenets:
 // import { Navbar, Jumbotron, Button } from 'react-bootstrap';
 import React from 'react';
