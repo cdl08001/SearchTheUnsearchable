@@ -1,4 +1,4 @@
-## SearchTheUnsearchavle
+## SearchTheUnsearchable
 This application aims to convert mutlimedia files to text using AWS (S3 and Transcribe). 
 
 ## Motivation
