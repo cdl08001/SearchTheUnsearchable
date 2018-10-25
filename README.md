@@ -37,18 +37,21 @@ The first step will be to create a mongodb database called 'searchtheunsearchabl
 
 # filehashes
 Schema: 
-`const hashSchema = new Schema({
+```
+const hashSchema = new Schema({
   hashcode: String,
   name: String,
   path: String,
   lastModifiedDate: Date,
   size: Number,
   type: String,
-});`
+});
+```
 
 # transcriptionresults
 Schema:
-`const transcriptionResultsSchema = new Schema({
+```
+const transcriptionResultsSchema = new Schema({
   hashcode: String,
   transcripts: [{
     transcript: String,
@@ -61,7 +64,8 @@ Schema:
       content: String,
     }],
   }],
-});`
+});
+```
 
 Once your database has been setup and the respository cloned down to a local machine, the following code will need to be run within the terminal to start the dev environment (use separate windows for each script): 
 
