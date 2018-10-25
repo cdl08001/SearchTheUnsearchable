@@ -12,7 +12,8 @@ This application leverages CircleCI for continuous integration:
 ## Code style
 If you're using any code style like xo, standard etc. That will help others while contributing to your project. Ex. -
 
-![https://img.shields.io/badge/code%20style-airbnb-brightgreen.svg](https://github.com/airbnb/javascript)
+![Airbnb(https://img.shields.io/badge/code%20style-airbnb-brightgreen.svg)](https://github.com/airbnb/javascript)
+[![JavaScript Style Guide: Airbbnb](https://img.shields.io/badge/code%20style-airbnb-brightgreen.svg)](https://github.com/airbnb/javascript)
  
 ## Screenshots
 Include logo/demo screenshot etc.
