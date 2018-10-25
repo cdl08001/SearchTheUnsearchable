@@ -2,7 +2,7 @@
 This application aims to convert mutlimedia files to text using AWS (S3 and Transcribe). 
 
 ## Motivation
-One challenge that is present in the eDiscovery space is the conversion of multimedia files to text. 
+One challenge that is present in the eDiscovery space is the conversion of multimedia files to text. The motivation for the creation of this app is to leverage speech-to-text technology to help conquer this challenge. 
 
 ## Build status
 This application leverages CircleCI for continuous integration:
@@ -12,7 +12,7 @@ This application leverages CircleCI for continuous integration:
 ## Code style
 If you're using any code style like xo, standard etc. That will help others while contributing to your project. Ex. -
 
-[![https://img.shields.io/badge/code%20style-airbnb-brightgreen.svg](https://github.com/airbnb/javascript)]
+![https://img.shields.io/badge/code%20style-airbnb-brightgreen.svg](https://github.com/airbnb/javascript)
  
 ## Screenshots
 Include logo/demo screenshot etc.
