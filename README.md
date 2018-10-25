@@ -10,49 +10,80 @@ This application leverages CircleCI for continuous integration:
 ![CircleCI](https://circleci.com/gh/cdl08001/SearchTheUnsearchable/tree/master.svg?style=svg)
 
 ## Code style
-If you're using any code style like xo, standard etc. That will help others while contributing to your project. Ex. -
+This application follows the Airbnb JavaScript Style Guide:
 
-![Airbnb(https://img.shields.io/badge/code%20style-airbnb-brightgreen.svg)](https://github.com/airbnb/javascript)
 [![JavaScript Style Guide: Airbbnb](https://img.shields.io/badge/code%20style-airbnb-brightgreen.svg)](https://github.com/airbnb/javascript)
  
 ## Screenshots
-Include logo/demo screenshot etc.
+Working
 
 ## Tech/framework used
 Ex. -
 
 <b>Built with</b>
 - [Electron](https://electron.atom.io)
+- [ReactJS](https://reactjs.org/)
+- [Express JS](https://expressjs.com/)
+- [Mongoose JS](https://mongoosejs.com/)
+- [AWS S3](https://aws.amazon.com/s3/)
+- [AWS Transcribe](https://aws.amazon.com/transcribe/)
 
 ## Features
-What makes your project stand out?
+Working
 
 ## Code Example
-Show what the library does as concisely as possible, developers should be able to figure out **how** your project solves their problem by looking at the code example. Make sure the API you are showing off is obvious, and that your code is short and concise.
+Working
 
 ## Installation
-Provide step by step series of examples and explanations about how to get a development env running.
+The first step will be to create a mongodb database called 'searchtheunsearchable', and add the following two collections: 
+
+# filehashes
+Schema: 
+`const hashSchema = new Schema({
+  hashcode: String,
+  name: String,
+  path: String,
+  lastModifiedDate: Date,
+  size: Number,
+  type: String,
+});`
+
+# transcriptionresults
+Schema:
+`const transcriptionResultsSchema = new Schema({
+  hashcode: String,
+  transcripts: [{
+    transcript: String,
+  }],
+  items: [{
+    start_time: String,
+    end_time: String,
+    alternatives: [{
+      confidence: String,
+      content: String,
+    }],
+  }],
+});`
+
+Once your database has been setup and the respository cloned down to a local machine, the following code will need to be run within the terminal to start the dev environment (use separate windows for each script): 
+
+`npm run react`
+`npm run electron`
+`npm run server`
+`npm run database`
 
 ## API Reference
 
-Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. For medium size to larger projects it is important to at least provide a link to where the API reference docs live.
+Working
 
 ## Tests
-Describe and show how to run the tests with code examples.
+
+Working
 
 ## How to use?
-If people like your project they’ll want to learn how they can use it. To do so include step by step guide to use your project.
+
+Working
 
 ## Contribute
 
-Let people know how they can contribute into your project. A [contributing guideline](https://github.com/zulip/zulip-electron/blob/master/CONTRIBUTING.md) will be a big plus.
-
-## Credits
-Give proper credits. This could be a link to any repo which inspired you to build this project, any blogposts or links to people who contrbuted in this project. 
-
-#### Anything else that seems useful
-
-## License
-A short snippet describing the license (MIT, Apache etc)
-
-MIT © [Yourname]()
+Working
