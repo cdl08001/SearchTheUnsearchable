@@ -7,7 +7,7 @@ One challenge that is present in the eDiscovery space is the conversion of multi
 ## Build status
 This application leverages CircleCI for continuous integration:
 
-[![CircleCI](https://circleci.com/gh/cdl08001/SearchTheUnsearchable/tree/master.svg?style=svg)]
+![CircleCI](https://circleci.com/gh/cdl08001/SearchTheUnsearchable/tree/master.svg?style=svg)
 
 ## Code style
 If you're using any code style like xo, standard etc. That will help others while contributing to your project. Ex. -
