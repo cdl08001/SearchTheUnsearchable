@@ -30,3 +30,14 @@ html, body, #root, #rootContents {
   margin-top: 2.5px;
   margin-bottom: 2.5px;
 }
+
+/* ------ File Metadata Results ------ */
+#backBtn {
+  margin-right: 2.5px;
+}
+
+#uploadToS3Btn {
+  margin-left: 2.5px;
+}
+
+

@@ -78,7 +78,7 @@ app.post('/hash', (req, res) => {
           transcript: res.locals.formattedTranscription,
         });
       })
-      .catch(queryErr => res.status(500).send(queryErr));
+      .catch(queryErr => res.status(500).send(`this is a test: ${queryErr}`));
   }
 });
 
