@@ -9,6 +9,7 @@ html, body, #root, #rootContents {
 }
 
 #title {
+  font-family: 'Chakra Petch', sans-serif;
   text-align: center;
   padding-top: 20px;
   padding-bottom: 20px;
@@ -20,4 +21,12 @@ html, body, #root, #rootContents {
 #body {
   height: 100%;
   background-color: rgba(0, 123, 255, 0.5);
+}
+
+/* ------ File Selection ------ */
+#fileSelectorLabel, #fileSelector, #fileSelectorBtn {
+  padding-top: 2.5px;
+  padding-bottom: 2.5px;
+  margin-top: 2.5px;
+  margin-bottom: 2.5px;
 }

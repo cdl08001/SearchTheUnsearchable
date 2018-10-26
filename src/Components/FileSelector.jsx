@@ -6,12 +6,10 @@ function FileSelector(props) {
   return (
     <form onSubmit={handleFileSelectionSubmit}>
       <div className="form-group">
-        <label htmlFor="inputFile">
-          Select an Audio File
-          <input type="file" id="fileSelector" accept="audio/*" multiple="false" />
-        </label>
+        <label htmlFor="inputFile" id="fileSelectorLabel">Select an Audio File to Begin Transcription Process.</label>
+        <input type="file" className="form-control-file" id="fileSelector" accept="audio/*" multiple="false" />
+        <button type="submit" id="fileSelectorBtn">Submit</button>
       </div>
-      <button type="submit" className="btn btn-primary">Submit</button>
     </form>
   );
 }
