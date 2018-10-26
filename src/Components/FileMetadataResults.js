@@ -19,16 +19,36 @@ function FileMetadataResults(props) {
   return (
     <div>
       <h2>Metadata</h2>
-      <ul>
-        <li>{`File Name: ${name}`}</li>
-        <li>{`File Path: ${path}` }</li>
-        <li>{`File Size: ${size}`}</li>
-        <li>{`File Type: ${type}`}</li>
-        <li>{`Last Modified Date: ${new Date(lastModifiedDate)}`}</li>
-        <li>{`Hashcode: ${hashcode}`}</li>
-      </ul>
-      <button type="submit" className="btn btn-primary" onClick={handleBack}>Back</button>
-      <button type="submit" className="btn btn-primary" onClick={handleS3UploadSubmit}>Upload to S3</button>
+      <table className="table" id="hashcodeMetadataTable">
+        <tbody>
+          <tr>
+            <th scope="row">File Name:</th>
+            <td>{name}</td>
+          </tr>
+          <tr>
+            <th scope="row">File Path:</th>
+            <td>{path}</td>
+          </tr>
+          <tr>
+            <th scope="row">File Size:</th>
+            <td>{size}</td>
+          </tr>
+          <tr>
+            <th scope="row">File Type:</th>
+            <td>{type}</td>
+          </tr>
+          <tr>
+            <th scope="row">Last Modified Date:</th>
+            <td>{`${new Date(lastModifiedDate)}`}</td>
+          </tr>
+          <tr>
+            <th scope="row">Hashcode:</th>
+            <td>{hashcode}</td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="submit" className="btn btn-primary" id="backBtn" onClick={handleBack}>Back</button>
+      <button type="submit" className="btn btn-primary" id="uploadToS3Btn" onClick={handleS3UploadSubmit}>Upload to S3</button>
     </div>
   );
 }

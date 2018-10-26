@@ -1,0 +1,43 @@
+/* ------ Setup Max Height for Background Shading ------ */
+html, body, #root, #rootContents {
+  height: 100%;
+}
+
+/* ------ Banner and Title ------ */
+#titleBanner {
+  background-color: black;
+}
+
+#title {
+  font-family: 'Chakra Petch', sans-serif;
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: #0085ff;
+}
+
+/* ------ Body ------ */
+
+#body {
+  height: 100%;
+  background-color: rgba(0, 123, 255, 0.5);
+}
+
+/* ------ File Selection ------ */
+#fileSelectorLabel, #fileSelector, #fileSelectorBtn {
+  padding-top: 2.5px;
+  padding-bottom: 2.5px;
+  margin-top: 2.5px;
+  margin-bottom: 2.5px;
+}
+
+/* ------ File Metadata Results ------ */
+#backBtn {
+  margin-right: 2.5px;
+}
+
+#uploadToS3Btn {
+  margin-left: 2.5px;
+}
+
+

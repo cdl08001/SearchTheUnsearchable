@@ -233,11 +233,19 @@ class App extends Component {
 
   render() {
     return (
-      <div>
-        <h1 className="text-center">
-          <u>Search The Unsearchable!</u>
-        </h1>
-        {this.updateView()}
+      <div id="rootContents">
+        <div id="titleBanner">
+          <div className="container" id="title">
+            <h1>
+              <u>Search The Unsearchable!</u>
+            </h1>
+          </div>
+        </div>
+        <div id="body">
+          <div className="container">
+            {this.updateView()}
+          </div>
+        </div>
       </div>
     );
   }
