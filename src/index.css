@@ -32,7 +32,7 @@ html, body, #root, #rootContents {
 }
 
 /* ------ File Metadata Results ------ */
-#backBtn {
+#metadataResultsBackBtn {
   margin-right: 2.5px;
 }
 
@@ -40,4 +40,16 @@ html, body, #root, #rootContents {
   margin-left: 2.5px;
 }
 
+/* ------ S3UploadResults ------ */
+#s3UploadResultsBackBtn {
+  margin-right: 2.5px;
+}
 
+#handleTranscribeJobBtn {
+  margin-left: 2.5px;
+}
+
+/* ------ Transcription Job Submission and Download ------ */
+#handleTranscriptionDownloadBtn {
+  margin-right: 2.5px;
+}

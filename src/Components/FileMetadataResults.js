@@ -47,7 +47,7 @@ function FileMetadataResults(props) {
           </tr>
         </tbody>
       </table>
-      <button type="submit" className="btn btn-primary" id="backBtn" onClick={handleBack}>Back</button>
+      <button type="submit" className="btn btn-primary" id="metadataResultsBackBtn" onClick={handleBack}>Back</button>
       <button type="submit" className="btn btn-primary" id="uploadToS3Btn" onClick={handleS3UploadSubmit}>Upload to S3</button>
     </div>
   );

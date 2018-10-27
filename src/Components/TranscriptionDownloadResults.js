@@ -16,18 +16,38 @@ function TranscriptionDownloadResults(props) {
   return (
     <div>
       <h2>Transcription Results</h2>
-      <ul>
-        <li>{`File Name: ${name}`}</li>
-        <li>{`File Path: ${path}` }</li>
-        <li>{`File Size: ${size}`}</li>
-        <li>{`File Type: ${type}`}</li>
-        <li>{`Last Modified Date: ${new Date(lastModifiedDate)}`}</li>
-        <li>{`Hashcode: ${hashcode}`}</li>
-      </ul>
-      <div>
-        Results:
-        <p>{transcript}</p>
-      </div>
+      <table className="table" id="transcriptionDownloadResultsTable">
+        <tbody>
+          <tr>
+            <th scope="row">File Name:</th>
+            <td>{name}</td>
+          </tr>
+          <tr>
+            <th scope="row">File Path:</th>
+            <td>{path}</td>
+          </tr>
+          <tr>
+            <th scope="row">File Size:</th>
+            <td>{size}</td>
+          </tr>
+          <tr>
+            <th scope="row">File Type:</th>
+            <td>{type}</td>
+          </tr>
+          <tr>
+            <th scope="row">Last Modified Date:</th>
+            <td>{`${new Date(lastModifiedDate)}`}</td>
+          </tr>
+          <tr>
+            <th scope="row">Hashcode</th>
+            <td>{hashcode}</td>
+          </tr>
+          <tr>
+            <th scope="row">Results</th>
+            <td>{transcript}</td>
+          </tr>
+        </tbody>
+      </table>
       <button type="submit" className="btn btn-primary">Do Something</button>
     </div>
   );

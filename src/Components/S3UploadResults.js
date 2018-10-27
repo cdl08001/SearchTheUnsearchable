@@ -18,15 +18,32 @@ function s3UploadResults(props) {
   return (
     <div>
       <h2>S3 Upload Complete</h2>
-      <ul>
-        <li>{`Bucket: ${Bucket}`}</li>
-        <li>{`ETag: ${ETag}` }</li>
-        <li>{`File Name: ${Key}`}</li>
-        <li>{`AWS Location: ${Location}`}</li>
-        <li>{`Server Side Encryption: ${ServerSideEncryption}`}</li>
-      </ul>
-      <button type="submit" className="btn btn-primary" onClick={handleBack}>Back</button>
-      <button type="submit" className="btn btn-primary" onClick={handleTranscribeJobSubmit}>Submit Transcription Job</button>
+      <table className="table" id="s3UploadDataTable">
+        <tbody>
+          <tr>
+            <th scope="row">Bucket:</th>
+            <td>{Bucket}</td>
+          </tr>
+          <tr>
+            <th scope="row">ETag:</th>
+            <td>{ETag}</td>
+          </tr>
+          <tr>
+            <th scope="row">File Name:</th>
+            <td>{Key}</td>
+          </tr>
+          <tr>
+            <th scope="row">AWS Location:</th>
+            <td>{Location}</td>
+          </tr>
+          <tr>
+            <th scope="row">Server Side Encryption</th>
+            <td>{ServerSideEncryption}</td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="submit" className="btn btn-primary" id="s3UploadResultsBackBtn" onClick={handleBack}>Back</button>
+      <button type="submit" className="btn btn-primary" id="handleTranscribeJobBtn" onClick={handleTranscribeJobSubmit}>Submit Transcription Job</button>
     </div>
   );
 }
