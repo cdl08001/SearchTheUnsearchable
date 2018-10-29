@@ -19,13 +19,30 @@ function TranscriptionJobResults(props) {
     view = (
       <div>
         <h2>Transcribe Job Submitted</h2>
-        <ul>
-          <li>{`Job Name: ${TranscriptionJobName}`}</li>
-          <li>{`Job Status: ${TranscriptionJobStatus}`}</li>
-          <li>{`Job Submission Time: ${new Date(CreationTime)}`}</li>
-          <li>{`Media Format: ${MediaFormat}`}</li>
-          <li>{`Language Code: ${LanguageCode}`}</li>
-        </ul>
+        <table className="table" id="transcriptionJobSubmitTable">
+          <tbody>
+            <tr>
+              <th scope="row">Job Name:</th>
+              <td>{TranscriptionJobName}</td>
+            </tr>
+            <tr>
+              <th scope="row">Job Status:</th>
+              <td>{TranscriptionJobStatus}</td>
+            </tr>
+            <tr>
+              <th scope="row">Job Submission Time:</th>
+              <td>{`${new Date(CreationTime)}`}</td>
+            </tr>
+            <tr>
+              <th scope="row">Media Format:</th>
+              <td>{MediaFormat}</td>
+            </tr>
+            <tr>
+              <th scope="row">Language Code</th>
+              <td>{LanguageCode}</td>
+            </tr>
+          </tbody>
+        </table>
         <h3>
           {checkTranscribeJobStatus()}
         The operation is currently running.
@@ -53,20 +70,46 @@ function TranscriptionJobResults(props) {
     view = (
       <div>
         <h2>Transcribe Job Complete</h2>
-        <ul>
-          <li>{`Job Name: ${TranscriptionJobName}`}</li>
-          <li>{`Job Status: ${TranscriptionJobStatus}`}</li>
-          <li>{`Job Submission Time: ${new Date(CreationTime)}`}</li>
-          <li>{`Job Completion Time: ${new Date(CompletionTime)}`}</li>
-          <li>{`Media Format: ${MediaFormat}`}</li>
-          <li>{`Language Code: ${LanguageCode}`}</li>
-          <li>{`Media Sample Rate Herz: ${MediaSampleRateHertz}`}</li>
-          <li>{`Transcript Location: ${TranscriptFileUri}`}</li>
-        </ul>
+        <table className="table" id="transcriptionJobCompleteTable">
+          <tbody>
+            <tr>
+              <th scope="row">Job Name:</th>
+              <td>{TranscriptionJobName}</td>
+            </tr>
+            <tr>
+              <th scope="row">Job Status:</th>
+              <td>{TranscriptionJobStatus}</td>
+            </tr>
+            <tr>
+              <th scope="row">Job Submission Time:</th>
+              <td>{`${new Date(CreationTime)}`}</td>
+            </tr>
+            <tr>
+              <th scope="row">Job Completion Time:</th>
+              <td>{`${new Date(CompletionTime)}`}</td>
+            </tr>
+            <tr>
+              <th scope="row">Media Format:</th>
+              <td>{MediaFormat}</td>
+            </tr>
+            <tr>
+              <th scope="row">Language Code</th>
+              <td>{LanguageCode}</td>
+            </tr>
+            <tr>
+              <th scope="row">Media Sample Rate Hertz</th>
+              <td>{MediaSampleRateHertz}</td>
+            </tr>
+            <tr>
+              <th scope="row">Language Code</th>
+              <td>{TranscriptFileUri}</td>
+            </tr>
+          </tbody>
+        </table>
         <h3>
           The transcription results are ready for download.
         </h3>
-        <button type="submit" className="btn btn-primary" onClick={handleTranscriptionDownload}>Download</button>
+        <button type="submit" className="btn btn-primary" id="handleTranscriptionDownloadBtn" onClick={handleTranscriptionDownload}>Download</button>
       </div>
     );
   }
