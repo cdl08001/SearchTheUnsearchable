@@ -25,7 +25,8 @@
     "react-bootstrap": "^0.32.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "wait-on": "^3.1.0"
   },
   "devDependencies": {
     "electron": "^2.0.8",
@@ -41,12 +42,13 @@
   "scripts": {
     "react": "BROWSER=none react-scripts start",
     "build": "react-scripts build",
+    "wait": "wait-on http://localhost:3000/ && electron .",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "electron": "electron .",
     "server": "nodemon src/Server/Server.js",
     "database": "mongod --dbpath=/Users/calinlewis/Desktop/Personal_Projects/SearchTheUnsearchable/src/Database/__db",
-    "start": "npm-run-all --parallel react electron server database"
+    "start": "npm-run-all --parallel wait react server database"
   },
   "main": "src/electron-starter.js"
 }
