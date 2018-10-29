@@ -28,6 +28,8 @@ class App extends Component {
     this.handleTranscribeJobSubmit = this.handleTranscribeJobSubmit.bind(this);
     this.checkTranscribeJobStatus = this.checkTranscribeJobStatus.bind(this);
     this.handleTranscriptionDownload = this.handleTranscriptionDownload.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.handleHome = this.handleHome.bind(this);
   }
 
   updateView() {
@@ -73,6 +75,8 @@ class App extends Component {
         <TranscriptionDownloadResults
           transcriptionData={this.transcriptionData.results.transcripts}
           hashcodeResults={this.hashcodeResults}
+          handleSave={this.handleSave}
+          handleHome={this.handleHome}
         />
       );
     }
@@ -229,6 +233,23 @@ class App extends Component {
           throw new Error('ERROR (Downloading Transcription): ', error);
         });
     }
+  }
+
+  // Step 6: Save results to file
+  handleSave() {
+    console.log(this);
+  }
+
+  // Step 7: Clear App properties, and reset state to Go back to home.
+  handleHome() {
+    this.hashcodeResults = '';
+    this.s3UploadData = '';
+    this.transcribeJobData = '';
+    this.transcribeJobResults = '';
+    this.transcriptionData = '';
+    this.setState({
+      currentPhase: null,
+    });
   }
 
   render() {

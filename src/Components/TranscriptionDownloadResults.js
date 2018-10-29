@@ -2,7 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 function TranscriptionDownloadResults(props) {
-  const { transcriptionData, hashcodeResults } = props;
+  const {
+    transcriptionData,
+    hashcodeResults,
+    handleSave,
+    handleHome,
+  } = props;
   const { transcript } = transcriptionData[0];
   const {
     hashcode,
@@ -48,7 +53,8 @@ function TranscriptionDownloadResults(props) {
           </tr>
         </tbody>
       </table>
-      <button type="submit" className="btn btn-primary">Do Something</button>
+      <button type="submit" className="btn btn-primary" onClick={handleHome}>Home</button>
+      <button type="submit" className="btn btn-primary" onClick={handleSave}>Save Results</button>
     </div>
   );
 }
@@ -65,6 +71,8 @@ TranscriptionDownloadResults.propTypes = {
     size: PropTypes.number.isRequired,
     type: PropTypes.string.isRequired,
   }).isRequired,
+  handleSave: PropTypes.func.isRequired,
+  handleHome: PropTypes.func.isRequired,
 };
 
 export default TranscriptionDownloadResults;
