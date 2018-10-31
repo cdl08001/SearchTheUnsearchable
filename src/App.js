@@ -7,7 +7,6 @@ import FileMetadataResults from './Components/FileMetadataResults';
 import S3UploadResults from './Components/S3UploadResults';
 import TranscriptionJobResults from './Components/TranscriptionJobResults';
 import TranscriptionDownloadResults from './Components/TranscriptionDownloadResults';
-import { saveMetadata, saveTranscript } from './File_Save/Save_To_File';
 
 const baseUrl = 'http://localhost:3001';
 
@@ -259,7 +258,7 @@ class App extends Component {
         <div id="titleBanner">
           <div className="container" id="title">
             <h1>
-              <u>Search The Unsearchable!</u>
+              <u>Search The Unsearchable</u>
             </h1>
           </div>
         </div>

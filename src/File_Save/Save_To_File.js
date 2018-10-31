@@ -1,24 +1,24 @@
 const path = require('path');
 const Promise = require('bluebird');
-const fs = Promise.promisifyAll(require('fs'));
+const promiseWriteFile = Promise.promisify(require('fs').writeFile);
 
-const saveMetadata = (filePath, metaData) => {
-  fs.writeFile(`${filePath}_metadata.txt`, metaData)
-    .then(() => 0)
+const saveLocation = path.join(__dirname, '../../Exports');
+
+const saveMetadata = (fileName, metaData) => {
+  promiseWriteFile(`${fileName}_metadata.txt`, metaData)
+    .then(() => true)
     .catch((err) => {
       throw err;
     });
 };
 
-const saveTranscript = (filePath, transcript) => {
-  fs.writeFile(`${filePath}_transcript.txt`, transcript)
-    .then(() => 0)
+const saveTranscript = (fileName, transcript) => {
+  promiseWriteFile(`${saveLocation}/${fileName}_transcript.txt`, transcript)
+    .then(() => true)
     .catch((err) => {
       throw err;
     });
 };
-
-console.log(path.join(__dirname, '../../Exports'));
 
 module.exports = {
   saveMetadata,
