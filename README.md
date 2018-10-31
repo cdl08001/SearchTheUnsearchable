@@ -67,11 +67,9 @@ const transcriptionResultsSchema = new Schema({
 });
 ```
 
-Once your database has been setup and the respository cloned down to a local machine, the following code will need to be run within the terminal to start the dev environment (use separate windows for each script): 
+Once your database has been setup and the respository cloned down to a local machine, the following code should be run within the terminal to launch the application (dev environment): 
 
-`npm run react`
-`npm run electron`
-`npm run server`
+`npm run start`
 
 ** NOTE: The following script will need to be adjusted within the package.json to point to your specific mongodb configuration: 
 
