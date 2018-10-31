@@ -28,6 +28,8 @@ class App extends Component {
     this.handleTranscribeJobSubmit = this.handleTranscribeJobSubmit.bind(this);
     this.checkTranscribeJobStatus = this.checkTranscribeJobStatus.bind(this);
     this.handleTranscriptionDownload = this.handleTranscriptionDownload.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.handleHome = this.handleHome.bind(this);
   }
 
   updateView() {
@@ -73,6 +75,8 @@ class App extends Component {
         <TranscriptionDownloadResults
           transcriptionData={this.transcriptionData.results.transcripts}
           hashcodeResults={this.hashcodeResults}
+          handleSave={this.handleSave}
+          handleHome={this.handleHome}
         />
       );
     }
@@ -231,13 +235,45 @@ class App extends Component {
     }
   }
 
+  // Step 6: Save results to file
+  handleSave() {
+    const { hashcodeResults } = this.hashcodeResults;
+    const { transcript } = this.transcriptionData.results.transcripts[0];
+    axios({
+      method: 'post',
+      url: `${baseUrl}/saveToFile`,
+      data: {
+        hashcodeResults,
+        transcript,
+      },
+    })
+      .then((location) => {
+        window.alert(`Metadata and Transcript have been saved to the following location: ${location}`);
+      })
+      .catch((error) => {
+        window.alert(`An error occurred: ${error}`);
+      });
+  }
+
+  // Step 7: Clear App properties, and reset state to Go back to home.
+  handleHome() {
+    this.hashcodeResults = '';
+    this.s3UploadData = '';
+    this.transcribeJobData = '';
+    this.transcribeJobResults = '';
+    this.transcriptionData = '';
+    this.setState({
+      currentPhase: null,
+    });
+  }
+
   render() {
     return (
       <div id="rootContents">
         <div id="titleBanner">
           <div className="container" id="title">
             <h1>
-              <u>Search The Unsearchable!</u>
+              <u>Search The Unsearchable</u>
             </h1>
           </div>
         </div>
