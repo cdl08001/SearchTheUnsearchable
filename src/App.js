@@ -237,7 +237,22 @@ class App extends Component {
 
   // Step 6: Save results to file
   handleSave() {
-    console.log(this);
+    const { hashcodeResults } = this.hashcodeResults;
+    const { transcript } = this.transcriptionData.results.transcripts[0];
+    axios({
+      method: 'post',
+      url: `${baseUrl}/saveToFile`,
+      data: {
+        hashcodeResults,
+        transcript,
+      },
+    })
+      .then((location) => {
+        window.alert(`Metadata and Transcript have been saved to the following location: ${location}`);
+      })
+      .catch((error) => {
+        window.alert(`An error occurred: ${error}`);
+      });
   }
 
   // Step 7: Clear App properties, and reset state to Go back to home.
