@@ -6,6 +6,8 @@ const calculateSHA256 = require('../Hash/HashGeneration');
 
 const { uploadAudio, pullTranscription } = require('../AWS_S3/S3.js');
 
+const { saveMetadata, saveTranscript } = require('../File_Save/Save_To_File.js');
+
 const { addHash, addTranscription, findHash, findTranscription } = require('../Database/Database.js');
 
 const { submitTranscriptionJob, checkTranscriptionStatus } = require('../AWS_Transcribe/Transcribe.js');
@@ -38,7 +40,6 @@ app.post('/hash', (req, res, next) => {
   findHash(res.locals.hashFileData.hashcode)
     .then((queryResult) => {
       res.locals.queryResult = queryResult;
-      // result: queryResult[0],
       if (queryResult.length > 0) {
         res.locals.inDatabase = true;
         next();
@@ -134,10 +135,31 @@ app.post('/downloadTranscription', (req, res) => {
   const { hashcode } = res.locals;
   const { transcripts, items } = res.locals.transcriptionResults.results;
   addTranscription(hashcode, transcripts, items)
-    .then((transcriptionSaveData) => {
+    .then(() => {
       res.status(200).send(res.locals.transcriptionResults);
     })
     .catch(transcriptionSaveErr => res.status(500).send(transcriptionSaveErr));
+});
+
+// Attempt to save the metadata to local machine
+app.post('/saveToFile', (req, res, next) => {
+  res.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.locals.hashcodeResults = req.body.hashcodeResults;
+  res.locals.transcript = req.body.transcript;
+  saveMetadata(res.locals.hashcodeResults.name, res.locals.hashcodeResults)
+    .then(() => {
+      next();
+    })
+    .catch(saveMetadataErr => res.status(500).send(saveMetadataErr));
+});
+
+// Attempt to save the transcript to local machine
+app.post('/saveToFile', (req, res) => {
+  saveTranscript(res.locals.hashcodeResults.name, res.locals.transcript)
+    .then(() => {
+      res.status(200).send('Success: metadata and transcript saved');
+    })
+    .catch(saveTrascriptErr => res.status(500).send(saveTrascriptErr));
 });
 
 app.listen(3001, () => console.log('Server is listening on port 3001!'));
