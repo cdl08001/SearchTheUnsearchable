@@ -237,8 +237,8 @@ class App extends Component {
 
   // Step 6: Save results to file
   handleSave() {
-    const { hashcodeResults } = this.hashcodeResults;
-    const { transcript } = this.transcriptionData.results.transcripts[0];
+    const { hashcodeResults, transcriptionData } = this;
+    const { transcript } = transcriptionData.results.transcripts[0];
     axios({
       method: 'post',
       url: `${baseUrl}/saveToFile`,
@@ -247,8 +247,8 @@ class App extends Component {
         transcript,
       },
     })
-      .then((location) => {
-        window.alert(`Metadata and Transcript have been saved to the following location: ${location}`);
+      .then(() => {
+        window.alert('Metadata and Transcript have been saved to SearchTheUnsearchable/Exports.');
       })
       .catch((error) => {
         window.alert(`An error occurred: ${error}`);
