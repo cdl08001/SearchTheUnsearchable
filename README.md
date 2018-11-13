@@ -33,6 +33,13 @@ Working
 Working
 
 ## Installation
+**NOTE: The AWS services used in this application (S3 and Transcribe) are not free services. Amazon _currently_ offers free tiers for both services depending on usage (as of 11/13/18), however this can change at any moment. Please review Amazon's pricing for these services before leveraging this application:** https://aws.amazon.com/pricing/
+
+In order to leverage this application, you will need to create an AWS account and associated access key. Documentation to help get you started can be found below: 
+
+Getting Started: https://aws.amazon.com/getting-started/
+Configuration and Credential Files: https://docs.aws.amazon.com/cli/latest/userguide/cli-config-files.html
+
 The first step will be to create a mongodb database called 'searchtheunsearchable', and add the following two collections: 
 
 ### filehashes
