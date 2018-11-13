@@ -38,6 +38,7 @@ Working
 In order to leverage this application, you will need to create an AWS account and associated access key. Documentation to help get you started can be found below: 
 
 Getting Started: https://aws.amazon.com/getting-started/
+
 Configuration and Credential Files: https://docs.aws.amazon.com/cli/latest/userguide/cli-config-files.html
 
 Once the AWS configuration is complete, clone the repo and run `npm intall` to install the necessary dependencies. Then, simply start the app with the command `npm run start` 
