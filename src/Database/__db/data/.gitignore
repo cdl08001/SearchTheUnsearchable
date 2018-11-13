@@ -1,4 +1,2 @@
-# Ignore everything in this directory
-*
-# Except this file
-!.gitignore
+# Ignore this file. It was created for the purpose of creating the Database/__dbb/data folderpath 
+# needed for the MongoDB implementation
