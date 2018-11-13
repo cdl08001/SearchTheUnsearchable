@@ -48,7 +48,7 @@
     "eject": "react-scripts eject",
     "electron": "electron .",
     "server": "nodemon src/Server/Server.js",
-    "database": "mongod --dbpath=/Users/calinlewis/Desktop/Personal_Projects/SearchTheUnsearchable/src/Database/__db",
+    "database": "mongod --dbpath=./src/Database/__db",
     "start": "npm-run-all --parallel wait react server database"
   },
   "main": "src/electron-starter.js"
