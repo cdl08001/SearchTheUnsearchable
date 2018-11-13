@@ -94,9 +94,6 @@ const findTranscription = targetHash => new Promise((resolve, reject) => {
 
 // Adds hashcode and transcription information to the 'transcriptionresults' collection and returns query result
 const addTranscription = (hashcode, transcripts, items) => new Promise((resolve, reject) => {
-  console.log('Hashcode: ', hashcode)
-  console.log('Transcripts: ', transcripts)
-  console.log('Items: ', items)
   mongoose.connect('mongodb://localhost:27017/searchtheunsearchable', { useNewUrlParser: true })
     .then(() => {
       const newTranscript = new TranscriptResult({
