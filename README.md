@@ -40,7 +40,15 @@ In order to leverage this application, you will need to create an AWS account an
 Getting Started: https://aws.amazon.com/getting-started/
 Configuration and Credential Files: https://docs.aws.amazon.com/cli/latest/userguide/cli-config-files.html
 
-The first step will be to create a mongodb database called 'searchtheunsearchable', and add the following two collections: 
+Once the AWS configuration is complete, clone the repo and run `npm intall` to install the necessary dependencies. Then, simply start the app with the command `npm run start` 
+
+## API Reference
+
+Working
+
+## Database Reference: 
+
+This application will automatically create a local 'searchtheunsearchable' database and the following two collections the first time an audio file is uploaded, run through transcription, and downloaded: 
 
 ### filehashes
 Schema: 
@@ -73,19 +81,6 @@ const transcriptionResultsSchema = new Schema({
   }],
 });
 ```
-
-Once your database has been setup and the respository cloned down to a local machine, the following code should be run within the terminal to launch the application (dev environment): 
-
-`npm run start`
-
-** NOTE: The following script will need to be adjusted within the package.json to point to your specific mongodb configuration: 
-
-`npm run database`
-
-
-## API Reference
-
-Working
 
 ## Tests
 
