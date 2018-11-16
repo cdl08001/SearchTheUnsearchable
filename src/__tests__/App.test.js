@@ -2,12 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { shallow, mount, render } from 'enzyme';
 import App from '../App';
-
-// it('renders without crashing', () => {
-//   const div = document.createElement('div');
-//   ReactDOM.render(<App />, div);
-//   ReactDOM.unmountComponentAtNode(div);
-// });
+import FileSelector from '../Components/FileSelector';
 
 describe('Application Initial Load', () => {
   const initialLoad = new App();
@@ -46,7 +41,7 @@ describe('Application Initial Load', () => {
     });
 
     it('contains handleFileSelectionSubmit method', () => {
-      expect(initialLoad.handleFileSelectionSubmit instanceof Function ).toBe(true);
+      expect(initialLoad.handleFileSelectionSubmit instanceof Function).toBe(true);
     });
 
     it('contains handleBack method', () => {
@@ -77,4 +72,62 @@ describe('Application Initial Load', () => {
       expect(initialLoad.handleHome instanceof Function).toBe(true);
     });
   });
+
+  describe('Application Rendering', () => {
+    it('renders without crashing', () => {
+      const div = document.createElement('div');
+      ReactDOM.render(<App />, div);
+      ReactDOM.unmountComponentAtNode(div);
+    });
+
+    it('renders title banner and header elements', () => {
+      const wrapper = shallow(<App />);
+      const header = (
+        <div id="titleBanner">
+          <div className="container" id="title">
+            <h1>
+              <u>Search The Unsearchable</u>
+            </h1>
+          </div>
+        </div>
+      );
+      expect(wrapper.contains(header)).toBe(true);
+    });
+
+    it('calls "updateView" during render', () => {
+      const spy = jest.spyOn(App.prototype, 'updateView');
+      const wrapper = shallow(<App />);
+      wrapper.instance().render();
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('renders one <FileSelector /> component', () => {
+      const wrapper = shallow(<App />);
+      expect(wrapper.find(FileSelector).length).toEqual(1);
+    });
+  });
+});
+
+describe('Application audio file submission', () => {
+
+});
+
+describe('Application upload to S3', () => {
+
+});
+
+describe('Application submit transcription job', () => {
+
+});
+
+describe('Application check transcription job status', () => {
+
+});
+
+describe('Application handle transcription download', () => {
+
+});
+
+describe('Application save to local drive', () => {
+
 });
