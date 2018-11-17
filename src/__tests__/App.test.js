@@ -105,6 +105,11 @@ describe('Application Initial Load', () => {
       const wrapper = shallow(<App />);
       expect(wrapper.find(FileSelector).length).toEqual(1);
     });
+
+    it('passes a "handleFileSelectionSubmit" function as props to <FileSelector />', () => {
+      const wrapper = shallow(<App />);
+      expect(wrapper.find(FileSelector).props().handleFileSelectionSubmit).toBeDefined();
+    });
   });
 });
 
