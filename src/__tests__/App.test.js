@@ -4,6 +4,8 @@ import { shallow, mount, render } from 'enzyme';
 import App from '../App';
 import FileSelector from '../Components/FileSelector';
 
+const nock = require('nock');
+
 describe('Application Initial Load', () => {
   const initialLoad = new App();
 
@@ -114,7 +116,40 @@ describe('Application Initial Load', () => {
 });
 
 describe('Application audio file submission', () => {
+  describe('Files that have not been previously transcribed', () => {
+    it('Should expect a 500 status error if no audioFile was submitted', () => {
+      const hashServer = nock('http://localhost:3001')
+        .post('/hash')
+        .reply('200');
+      const wrapper = shallow(<App />);
+      const inst = wrapper.instance();
+      const fakeEvent = {
+        preventDefault: () => true,
+      };
+      // inst.handleFileSelectionSubmit(fakeEvent);
+      expect(1).toEqual(1);
+    });
+    it('Should store hashcodeResults as class property', () => {
 
+    });
+    it('Should change state to hashcodeGenerated', () => {
+
+    });
+  });
+
+  describe('Files that have been previously transcribed', () => {
+    it('Should store hashcodeResults as class property', () => {
+
+    });
+
+    it('Should store transcriptionData as a class property', () => {
+
+    });
+
+    it('Should change state to transcriptionDownloadComplete', () => {
+
+    });
+  });
 });
 
 describe('Application upload to S3', () => {
