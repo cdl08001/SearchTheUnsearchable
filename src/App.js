@@ -98,7 +98,7 @@ class App extends Component {
   handleFileSelectionSubmit(event) {
     event.preventDefault();
     const audioData = [];
-    const targetFile = document.getElementById('fileSelector').files;
+    const targetFile = event.target[0].files;
     const fileInfo = {
       lastModifiedDate: targetFile[0].lastModifiedDate,
       name: targetFile[0].name,
