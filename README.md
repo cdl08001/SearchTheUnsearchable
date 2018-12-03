@@ -19,6 +19,7 @@ Working
 
 ## Tech/framework used
 <b>Built with</b>
+- [create-react-app](https://github.com/facebook/create-react-app)
 - [Electron](https://electron.atom.io)
 - [ReactJS](https://reactjs.org/)
 - [Express JS](https://expressjs.com/)
