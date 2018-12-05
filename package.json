@@ -55,5 +55,11 @@
     "database": "mongod --dbpath=./src/Database/__db",
     "start": "npm-run-all --parallel wait react server database"
   },
-  "main": "src/electron-starter.js"
+  "main": "src/electron-starter.js",
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

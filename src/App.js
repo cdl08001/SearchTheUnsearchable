@@ -107,13 +107,7 @@ class App extends Component {
       type: targetFile[0].type,
     };
     audioData.push(fileInfo);
-    axios({
-      method: 'post',
-      url: `${baseUrl}/hash`,
-      data: {
-        audioFiles: audioData,
-      },
-    })
+    return axios.post(`${baseUrl}/hash`, { audioFiles: audioData })
       .then((response) => {
         if (response.data.inDatabase === false) {
           this.hashcodeResults = response.data.result;
@@ -136,13 +130,7 @@ class App extends Component {
   // Step 2: Send file for upload to S3:
   handleS3UploadSubmit() {
     if (this.hashcodeResults !== '') {
-      axios({
-        method: 'post',
-        url: `${baseUrl}/S3Upload`,
-        data: {
-          uploadFile: this.hashcodeResults,
-        },
-      })
+      return axios.post(`${baseUrl}/S3Upload`, { uploadFile: this.hashcodeResults })
         .then((response) => {
           this.s3UploadData = response.data;
           this.setState({
@@ -158,13 +146,7 @@ class App extends Component {
   // Step 3: Initiate transcription job:
   handleTranscribeJobSubmit() {
     if (this.s3UploadData !== '') {
-      axios({
-        method: 'post',
-        url: `${baseUrl}/submitTranscribeJob`,
-        data: {
-          uploadFile: this.s3UploadData,
-        },
-      })
+      return axios.post(`${baseUrl}/submitTranscribeJob`, { uploadFile: this.s3UploadData })
         .then((response) => {
           this.transcribeJobData = response.data;
           this.setState({
@@ -182,13 +164,7 @@ class App extends Component {
   // check until job is completed.
   checkTranscribeJobStatus() {
     if (this.transcribeJobResults === '') {
-      axios({
-        method: 'post',
-        url: `${baseUrl}/checkTranscribeStatus`,
-        data: {
-          transcribeJobData: this.transcribeJobData,
-        },
-      })
+      return axios.post(`${baseUrl}/checkTranscribeStatus`, { transcribeJobData: this.transcribeJobData })
         .then((response) => {
           if (response.data.TranscriptionJob.TranscriptionJobStatus === 'IN_PROGRESS') {
             console.log('Checking...');
@@ -215,13 +191,9 @@ class App extends Component {
     const transcript = this.transcribeJobResults.TranscriptionJob.Transcript.TranscriptFileUri;
     const { hashcode } = this.hashcodeResults;
     if (this.transcriptionData === '') {
-      axios({
-        method: 'post',
-        url: `${baseUrl}/downloadTranscription`,
-        data: {
-          transcriptLocation: transcript,
-          hashcode,
-        },
+      return axios.post(`${baseUrl}/downloadTranscription`, {
+        transcriptLocation: transcript,
+        hashcode,
       })
         .then((response) => {
           this.transcriptionData = response.data;
@@ -239,14 +211,7 @@ class App extends Component {
   handleSave() {
     const { hashcodeResults, transcriptionData } = this;
     const { transcript } = transcriptionData.results.transcripts[0];
-    axios({
-      method: 'post',
-      url: `${baseUrl}/saveToFile`,
-      data: {
-        hashcodeResults,
-        transcript,
-      },
-    })
+    return axios.post(`${baseUrl}/saveToFile`, { hashcodeResults, transcript })
       .then(() => {
         window.alert('Metadata and Transcript have been saved to SearchTheUnsearchable/Exports.');
       })

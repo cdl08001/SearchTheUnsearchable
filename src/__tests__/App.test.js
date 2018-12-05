@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { shallow, mount, render } from 'enzyme';
+import axios from 'axios';
 import App from '../App';
 import FileSelector from '../Components/FileSelector';
 
-const nock = require('nock');
+jest.mock('axios');
 
 describe('Application Initial Load', () => {
   const initialLoad = new App();
@@ -117,23 +118,50 @@ describe('Application Initial Load', () => {
 
 describe('Application audio file submission', () => {
   describe('Files that have not been previously transcribed', () => {
-    it('Should expect a 500 status error if no audioFile was submitted', () => {
-      const hashServer = nock('http://localhost:3001')
-        .post('/hash')
-        .reply('200');
-      const wrapper = shallow(<App />);
-      const inst = wrapper.instance();
-      const fakeEvent = {
+    let wrapper;
+    let inst;
+    let fakeEvent;
+    const response = {
+      data: {
+        inDatabase: false,
+        result: {
+          hashcode: 'someHashcode',
+          lastModifiedDate: 'someDate',
+          name: 'someName',
+          path: 'somePath',
+          size: 0,
+          type: 'someType',
+        },
+      },
+    };
+    beforeAll(() => {
+      axios.post.mockResolvedValue(response);
+      wrapper = shallow(<App />);
+      inst = wrapper.instance();
+      fakeEvent = {
         preventDefault: () => true,
+        target: [{
+          files: 'someFile',
+          lastModifiedDate: 'someDate',
+          name: 'someName',
+          path: 'somePath',
+          type: 'someType',
+        }],
       };
-      // inst.handleFileSelectionSubmit(fakeEvent);
-      expect(1).toEqual(1);
     });
-    it('Should store hashcodeResults as class property', () => {
 
+    it('Should store results as hashcodeResults class property', () => {
+      inst.handleFileSelectionSubmit(fakeEvent)
+        .then(() => {
+          expect(inst.hashcodeResults).toBe(response.data.result);
+        });
     });
-    it('Should change state to hashcodeGenerated', () => {
 
+    it('Should change currentPhase state to hashCodeGenerated', () => {
+      inst.handleFileSelectionSubmit(fakeEvent)
+        .then(() => {
+          expect(inst.state.currentPhase).toBe('hashCodeGenerated');
+        });
     });
   });
 
